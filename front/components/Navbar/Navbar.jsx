@@ -1,15 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Logo } from "./Logo";
+import Link from "next/link";
 
 export const Navbar = () => {
  const [isOpened, setIsOpened] = useState(false);
  const [active, setActive] = useState("categories");
+ const [nightMode, setNightMode] = useState(false);
+ useEffect(() => {
+  if (nightMode) {
+   document.body.classList.add("dark");
+  } else {
+   document.body.classList.remove("dark");
+  }
+ }, [nightMode]);
 
  const openMenu = () => {
   setIsOpened(!isOpened);
  };
  return (
-  <div className="flex flex-col justify-between px-3 bg-slate-100 text-slate-400">
+  <div className="flex flex-col justify-between select-none px-3 bg-slate-100 dark:bg-slate-900 text-slate-500">
    <div className="flex flex-col items-center w-full">
     <Logo openMenu={openMenu} isOpened={isOpened} />
     <div
@@ -17,7 +26,8 @@ export const Navbar = () => {
       isOpened ? "items-start" : "items-center"
      } `}
     >
-     <div
+     <Link
+      href={`/`}
       onClick={() => {
        setActive("categories");
       }}
@@ -28,8 +38,9 @@ export const Navbar = () => {
      >
       <i className={`fa-solid fa-house ${isOpened && "mr-2"}`}></i>
       <div className="text-xl">{isOpened && "categories"}</div>
-     </div>
-     <div
+     </Link>
+     <Link
+      href={`/creations`}
       onClick={() => {
        setActive("creations");
       }}
@@ -38,9 +49,9 @@ export const Navbar = () => {
        "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
       }`}
      >
-      <i class={`fa-solid fa-briefcase ${isOpened && "mr-3"}`}></i>
+      <i className={`fa-solid fa-briefcase ${isOpened && "mr-3"}`}></i>
       <div className="text-xl">{isOpened && "creations"}</div>
-     </div>
+     </Link>
      <div
       onClick={() => {
        setActive("users");
@@ -50,7 +61,7 @@ export const Navbar = () => {
        "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
       }`}
      >
-      <i class={`fa-solid fa-user-group ${isOpened && "mr-2"}`}></i>
+      <i className={`fa-solid fa-user-group ${isOpened && "mr-2"}`}></i>
       <div className="text-xl">{isOpened && "users"}</div>
      </div>
     </div>
@@ -61,6 +72,7 @@ export const Navbar = () => {
     } `}
    >
     <div
+     onClick={() => setNightMode(!nightMode)}
      className={`flex items-center mb-7 ${
       isOpened ? "self-start" : "self-center"
      }`}
