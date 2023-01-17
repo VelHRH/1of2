@@ -1,7 +1,4 @@
-import { useState } from "react";
-
-export const Search = () => {
- const [searchVal, setSearchVal] = useState("");
+export const Search = ({ searchVal, setSearchVal }) => {
  return (
   <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl p-1 h-12 m-10">
    <div className="flex items-center bg-slate-50 dark:bg-slate-800 w-full h-full rounded-xl p-2 px-3">

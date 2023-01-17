@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Category } from "../components/Category";
 import { Search } from "../components/Search";
+import { useState } from "react";
 
 export const getStaticProps = async () => {
  const res = await fetch("http://localhost:4444/categories");
@@ -11,6 +12,7 @@ export const getStaticProps = async () => {
 };
 
 export default function Home({ categories }) {
+ const [searchVal, setSearchVal] = useState("");
  return (
   <div className="w-full flex">
    <Head>
@@ -19,13 +21,15 @@ export default function Home({ categories }) {
     <link rel="icon" href="/favicon.ico" />
    </Head>
    <div className="flex-1 h-screen bg-slate-50 dark:bg-slate-800">
-    <Search />
+    <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-3 mx-10">
-     {categories &&
-      categories.map((category) => (
-       <Category key={category._id}>{category.name}</Category>
-      ))}
+     {categories.map(
+      (category) =>
+       category.name.slice(0, searchVal.length) === searchVal && (
+        <Category key={category._id}>{category.name}</Category>
+       )
+     )}
     </div>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 h-screen"></div>
