@@ -77,7 +77,11 @@ export const Navbar = () => {
       isOpened ? "self-start" : "self-center"
      }`}
     >
-     <i className={`fa-solid dark:fa-sun fa-moon ${isOpened && "mr-3"}`}></i>
+     <i
+      className={`fa-solid ${nightMode ? "fa-sun" : "fa-moon"} ${
+       isOpened && "mr-3"
+      }`}
+     ></i>
      <div className="text-xl">{isOpened && "switch mode"}</div>
     </div>
     <div className={`flex items-center mb-7`}>
