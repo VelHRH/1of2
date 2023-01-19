@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Theme = (props) => {
  const { name, imgUrl, description, author, stars } = props;
  return (
