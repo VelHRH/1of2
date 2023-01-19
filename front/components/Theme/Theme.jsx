@@ -10,16 +10,18 @@ export const Theme = (props) => {
      alt="Theme"
      className="w-full h-full object-cover rounded-t-2xl"
     />
-    <div className="bg-slate-200 rounded-b-2xl flex flex-col p-2">
-     <div className="flex justify-between items-center">
+    <div className="bg-slate-200 dark:bg-slate-700 rounded-b-2xl flex flex-col p-2">
+     <div
+      className={`flex justify-between text-xl items-center rounded-lg text-slate-900 dark:text-slate-50 mb-3`}
+     >
       <div>{author}</div>
-      <h1 className="text-xl self-center">{name}</h1>
+      <div className="self-center text-center">{name}</div>
       <div>
        <i class="fa-regular fa-star mr-1 text-2xl"></i>
-       3.55
+       {stars}
       </div>
      </div>
-     <p className="text-justify">{description}</p>
+     <p className="text-justify text-slate-500">{description}</p>
     </div>
    </div>
   </div>

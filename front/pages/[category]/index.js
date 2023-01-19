@@ -20,6 +20,13 @@ export const getServerSideProps = async (context) => {
 
 const Category = ({themes}) => {
   const [searchVal, setSearchVal] = useState("");
+
+  const CountStars = (arr) => {
+    let sum = 0;
+    arr.map((item) => sum += item.stars);
+    return sum/arr.length;
+  }
+
   return (
     <div className="w-full flex">
    <Head>
@@ -32,7 +39,7 @@ const Category = ({themes}) => {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-2">
-     {themes.map(theme => <Theme name={theme.name} imgUrl={theme.imgUrl} author={theme.author} description={theme.description} />)}
+     {themes.map(theme => theme.name.slice(0, searchVal.length).toUpperCase() === searchVal.toUpperCase() && <Theme name={theme.name} stars={CountStars(theme.stars)} imgUrl={theme.imgUrl} author={theme.author} description={theme.description} />)}
     </div>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen">
@@ -43,7 +50,7 @@ const Category = ({themes}) => {
       }
      ></FunTip>
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
-      Top categories:
+      Popular themes here:
      </h1>
      
     </div>
