@@ -5,6 +5,8 @@ import { FunTip } from "../../components/FunTip";
 import { Theme } from "../../components/Theme/Theme";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { BackBtn } from "../../components/BackBtn";
+import { SideTop } from "../../components/SideTop";
 
 export const getServerSideProps = async (context) => {
  const { category } = context.params;
@@ -42,10 +44,7 @@ const Category = ({ themes }) => {
 
    <div className="flex-1 h-screen bg-slate-50 dark:bg-slate-800 p-10">
     <Link href={`/`}>
-     <div className="inline-flex items-center mb-3 text-2xl text-slate-500 cursor-pointer hover:scale-110 ease-in-out duration-300">
-      <i class="fa-solid fa-chevron-left mr-2"></i>
-      <h1>Caregories</h1>
-     </div>
+     <BackBtn>Categories</BackBtn>
     </Link>
     <h1 className="text-4xl mb-7 dark:text-slate-50 capitalize">{category}</h1>
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
@@ -69,13 +68,22 @@ const Category = ({ themes }) => {
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen">
     <div className="flex flex-col items-start px-10 pt-10">
      <FunTip
-      tipText={
-       "These are categories with topics created by our 1 of 2 team, but if there is no topic that you are interested in, you can find much more in our community creations or create a topic by yourself in the same section."
-      }
+      tipText={`These are the themes available in ${category} category. All of them were created by our admins, so there are not so many of them. You can find even more topics in the community creations section.`}
      ></FunTip>
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
       Popular themes here:
      </h1>
+     {[...themes]
+      .sort((a, b) => b.stars.length - a.stars.length)
+      .slice(0, 5)
+      .map((theme, index) => (
+       <SideTop
+        key={index}
+        place={index + 1}
+        themes={theme.stars.length}
+        name={theme.name.toUpperCase()}
+       />
+      ))}
     </div>
    </div>
   </div>
