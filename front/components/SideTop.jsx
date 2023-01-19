@@ -17,7 +17,7 @@ export const SideTop = (props) => {
    >
     <div className="text-2xl">{themes}</div>
    </div>
-   <p>{name}</p>
+   <p className="dark:text-slate-50">{name}</p>
   </div>
  );
 };

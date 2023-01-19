@@ -24,7 +24,7 @@ export default function Home({ categories }) {
     <link rel="icon" href="/favicon.ico" />
    </Head>
    <div className="flex-1 h-screen bg-slate-50 dark:bg-slate-800 p-10">
-    <h1 className="text-4xl mb-7">Categories</h1>
+    <h1 className="text-4xl mb-7 dark:text-slate-50">Categories</h1>
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-3">
