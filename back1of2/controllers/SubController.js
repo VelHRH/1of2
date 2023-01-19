@@ -1,4 +1,5 @@
 import CategoryModel from "../models/Category.js"
+import ThemeModel from "../models/Theme.js"
 
 export const getOne = async (req, res) => {
   try {

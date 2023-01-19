@@ -1,4 +1,5 @@
 import CategoryModel from "../models/Category.js"
+import ThemeModel from "../models/Theme.js"
 
 export const getAll = async (req, res) => {
   try {
@@ -14,16 +15,12 @@ export const getAll = async (req, res) => {
 export const getOne = async (req, res) => {
   try {
     const categoryName = req.params.name;
-    CategoryModel.findOne(
-      {name: categoryName},
-      "subcategories",
+    ThemeModel.find(
+      {category: categoryName},
       (err, subcategories) => {
         if (err){
           console.log(err);
           return res.status(500).json({message: "Unable to get category"});
-        }
-        if (!subcategories){
-          return res.status(404).json({message: "Category doesn't exist"});
         }
         res.json(subcategories);
       }
