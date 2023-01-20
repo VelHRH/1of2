@@ -54,13 +54,15 @@ const Category = ({ themes }) => {
       (theme) =>
        theme.name.slice(0, searchVal.length).toUpperCase() ===
         searchVal.toUpperCase() && (
-        <Theme
-         name={theme.name}
-         stars={CountStars(theme.stars)}
-         imgUrl={theme.imgUrl}
-         author={theme.author}
-         description={theme.description}
-        />
+        <Link href={`/${category}/${theme.name}`}>
+         <Theme
+          name={theme.name}
+          stars={CountStars(theme.stars)}
+          imgUrl={theme.imgUrl}
+          author={theme.author}
+          description={theme.description}
+         />
+        </Link>
        )
      )}
     </div>
