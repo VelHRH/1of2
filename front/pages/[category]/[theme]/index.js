@@ -41,11 +41,18 @@ const Theme = ({ theme }) => {
    if (i.stars === 1) nOf1++;
   }
   return [
-   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf1 },
-   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf2 },
-   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf3 },
-   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf4 },
-   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf5 },
+   {
+    avg:
+     (nOf5 * 5 + nOf4 * 4 + nOf3 * 3 + nOf2 * 2 + nOf1 * 1) /
+     (nOf5 + nOf4 + nOf3 + nOf2 + nOf1),
+   },
+   nOf1 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf1 },
+   nOf2 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf2 },
+   nOf3 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf3 },
+   nOf4 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf4 },
+   nOf5 !== 0 && {
+    value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf5,
+   },
   ];
  };
 
@@ -119,9 +126,12 @@ const Theme = ({ theme }) => {
      <i class="fa-regular fa-star mr-1 text-3xl"></i>
      <i class="fa-regular fa-star mr-1 text-3xl"></i>
     </div>
-    <h1 className="text-3xl mb-3 mt-7 dark:text-slate-50">Community:</h1>
-    {console.log(DataRatings())}
-    <ChartRatings data={DataRatings()} />
+    <h1 className="text-3xl mb-3 mt-10 dark:text-slate-50">Community:</h1>
+    <ChartRatings data={DataRatings().slice(1)} />
+    <div className="mt-3 text-xl">
+     Avg rating: {DataRatings()[0].avg.toFixed(2)}
+    </div>
+    <div className="mt-2 text-xl">Votes: {theme.stars.length}</div>
    </div>
   </div>
  );
