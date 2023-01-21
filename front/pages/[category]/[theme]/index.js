@@ -3,6 +3,7 @@ import { NumberBtn } from "../../../components/NumberBtn";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
+import ChartRatings from "../../../components/ChartRatings";
 
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
@@ -25,6 +26,29 @@ const Theme = ({ theme }) => {
  const handleModeChoice = (mode) => {
   setClickedMode(mode);
  };
+
+ const DataRatings = () => {
+  let nOf5 = 0,
+   nOf4 = 0,
+   nOf3 = 0,
+   nOf2 = 0,
+   nOf1 = 0;
+  for (let i of theme.stars) {
+   if (i.stars === 5) nOf5++;
+   if (i.stars === 4) nOf4++;
+   if (i.stars === 3) nOf3++;
+   if (i.stars === 2) nOf2++;
+   if (i.stars === 1) nOf1++;
+  }
+  return [
+   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf1 },
+   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf2 },
+   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf3 },
+   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf4 },
+   { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf5 },
+  ];
+ };
+
  return (
   <div className="w-full flex">
    <Head>
@@ -39,18 +63,12 @@ const Theme = ({ theme }) => {
     <h1 className="text-4xl mb-7 dark:text-slate-50 capitalize">
      {theme.name}
     </h1>
-    <div className="flex h-[350px]">
-     <img
-      src={theme.imgUrl}
-      alt="Subcategory"
-      className="flex-1 object-cover"
-     />
-     <div className="w-1/6">
-      <div className="h-1/2 ml-10 mb-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl shadow-[5px_5px] border-4 border-slate-800"></div>
-      <div className="h-1/2 ml-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl shadow-[5px_5px] border-4 border-slate-800"></div>
-     </div>
-    </div>
-    <div className="grid gap-4 grid-cols-4 mt-10 w-full">
+    <img
+     src={theme.imgUrl}
+     alt="Subcategory"
+     className="h-[350px] w-full object-cover"
+    />
+    <div className="grid gap-4 grid-cols-4 mt-5 w-full">
      <NumberBtn
       isClicked={clickedMode === "8"}
       handleModeChoice={handleModeChoice}
@@ -92,7 +110,19 @@ const Theme = ({ theme }) => {
      </div>
     </div>
    </div>
-   <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen"></div>
+   <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
+    <h1 className="text-3xl mb-3 dark:text-slate-50">Rate this theme:</h1>
+    <div className="">
+     <i class="fa-regular fa-star mr-1 text-3xl"></i>
+     <i class="fa-regular fa-star mr-1 text-3xl"></i>
+     <i class="fa-regular fa-star mr-1 text-3xl"></i>
+     <i class="fa-regular fa-star mr-1 text-3xl"></i>
+     <i class="fa-regular fa-star mr-1 text-3xl"></i>
+    </div>
+    <h1 className="text-3xl mb-3 mt-7 dark:text-slate-50">Community:</h1>
+    {console.log(DataRatings())}
+    <ChartRatings data={DataRatings()} />
+   </div>
   </div>
  );
 };
