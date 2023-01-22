@@ -6,6 +6,7 @@ import Head from "next/head";
 import ChartRatings from "../../../components/ChartRatings";
 import { StarRating } from "../../../components/Theme/StarRating";
 import { FullEvenView } from "../../../components/FullEvenView";
+import Router from "next/router";
 
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
@@ -138,12 +139,21 @@ const Theme = ({ theme, rating }) => {
        <i class="fa-solid fa-share-nodes mr-2"></i>
        Share
       </div>
-      <div
-       onClick={() => setIsGame(true)}
+
+      <a
+       onClick={() =>
+        Router.push(
+         {
+          pathname: `/${theme.category}/${theme.name}/game`,
+          query: { nEvents: clickedMode },
+         },
+         `/${theme.category}/${theme.name}/game`
+        )
+       }
        className="text-xl md:text-2xl col-span-2 flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-lime-500 to-green-600 cursor-pointer rounded-2xl hover:scale-105 ease-in-out duration-500"
       >
        Start
-      </div>
+      </a>
      </div>
     </div>
     <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">

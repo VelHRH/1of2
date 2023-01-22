@@ -33,12 +33,7 @@ export const getServerSideProps = async (context) => {
 };
 
 const Rating = ({ theme, rating }) => {
- const [clickedMode, setClickedMode] = useState("8");
- const [yourRating, setYourRating] = useState(0);
  const [isEventOpened, setIsEventOpened] = useState(-1);
- const handleModeChoice = (mode) => {
-  setClickedMode(mode);
- };
 
  const handleClick = (index) => {
   setIsEventOpened(index);
