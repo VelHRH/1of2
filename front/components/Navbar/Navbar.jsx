@@ -18,7 +18,7 @@ export const Navbar = () => {
   setIsOpened(!isOpened);
  };
  return (
-  <div className={`w-20 ${isOpened && "w-[200px]"}`}>
+  <div className={`w-20 ${isOpened && "w-[200px]"} z-10`}>
    <div
     className={`flex flex-col w-20 ${
      isOpened && "w-[200px]"
