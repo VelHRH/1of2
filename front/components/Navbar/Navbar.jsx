@@ -18,8 +18,12 @@ export const Navbar = () => {
   setIsOpened(!isOpened);
  };
  return (
-  <div className="w-20">
-   <div className="flex flex-col w-20 justify-between select-none px-3 bg-slate-100 dark:bg-slate-900 text-slate-500 h-screen fixed">
+  <div className={`w-20 ${isOpened && "w-[200px]"}`}>
+   <div
+    className={`flex flex-col w-20 ${
+     isOpened && "w-[200px]"
+    } justify-between select-none px-3 bg-slate-100 dark:bg-slate-900 text-slate-500 h-screen fixed`}
+   >
     <div className="flex flex-col items-center w-full">
      <Logo openMenu={openMenu} isOpened={isOpened} />
      <div
