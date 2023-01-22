@@ -4,6 +4,7 @@ import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
 import ChartRatings from "../../../components/ChartRatings";
+import { StarRating } from "../../../components/Theme/StarRating";
 
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
@@ -23,6 +24,7 @@ export const getServerSideProps = async (context) => {
 
 const Theme = ({ theme }) => {
  const [clickedMode, setClickedMode] = useState("8");
+ const [yourRating, setYourRating] = useState(0);
  const handleModeChoice = (mode) => {
   setClickedMode(mode);
  };
@@ -118,20 +120,14 @@ const Theme = ({ theme }) => {
     </div>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
-    <h1 className="text-3xl mb-3 dark:text-slate-50">Rate this theme:</h1>
-    <div className="">
-     <i class="fa-regular fa-star mr-1 text-3xl"></i>
-     <i class="fa-regular fa-star mr-1 text-3xl"></i>
-     <i class="fa-regular fa-star mr-1 text-3xl"></i>
-     <i class="fa-regular fa-star mr-1 text-3xl"></i>
-     <i class="fa-regular fa-star mr-1 text-3xl"></i>
-    </div>
-    <h1 className="text-3xl mb-3 mt-10 dark:text-slate-50">Community:</h1>
+    <StarRating yourRating={yourRating} setYourRating={setYourRating} />
+    <h1 className="text-3xl mb-5 mt-16 dark:text-slate-50">
+     Community: {DataRatings()[0].avg.toFixed(2)}
+    </h1>
     <ChartRatings data={DataRatings().slice(1)} />
-    <div className="mt-3 text-xl">
-     Avg rating: {DataRatings()[0].avg.toFixed(2)}
+    <div className="text-xl dark:text-slate-50 mt-5">
+     Based on {theme.stars.length} votes
     </div>
-    <div className="mt-2 text-xl">Votes: {theme.stars.length}</div>
    </div>
   </div>
  );

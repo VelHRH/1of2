@@ -16,7 +16,7 @@ export const Theme = (props) => {
       <div className="self-center text-center">{name}</div>
       <div>
        <i class="fa-regular fa-star mr-1 text-2xl"></i>
-       {stars}
+       {stars.toFixed(2)}
       </div>
      </div>
      <p className="text-justify text-slate-500">{description}</p>
