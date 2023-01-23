@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
 import { ResultElement } from "../../../components/ResultElement";
+import { FunTip } from "../../../components/FunTip";
 
 export const getServerSideProps = async (context) => {
- const { results } = context.query;
+ const { results, category, theme } = context.query;
+ console.log(results);
+ const res = await fetch(
+  `http://localhost:4444/categories/${category}/${theme}/results`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+   },
+   body: results,
+  }
+ );
+ const data = await res.json();
+ console.log(data);
  return {
   props: { results: JSON.parse(results) },
  };
@@ -17,6 +31,26 @@ const Results = ({ results }) => {
  const [displayMode, setDisplayMode] = useState("rating");
  const router = useRouter();
  const { category, theme } = router.query;
+
+ useEffect(() => {
+  if (results[results.length - 1].wins == 0) {
+   setTipText(
+    `Wow! You've got an interesting taste, as this is the first win for "${
+     results[results.length - 1].name
+    }" here.`
+   );
+  } else {
+   setTipText(
+    `Did you know? It's just ${results[results.length - 1].wins + 1}${
+     results[results.length - 1].wins + 1 === 2
+      ? "nd"
+      : results[results.length - 1].wins + 1 === 3
+      ? "rd"
+      : "th"
+    } win for "${results[results.length - 1].name}" here.`
+   );
+  }
+ }, []);
 
  const filterRes = (res) => {
   let sortedArray = [];
@@ -75,7 +109,7 @@ const Results = ({ results }) => {
            <img
             src={result.imgUrl}
             alt="Team1"
-            className={`mb-2 h-[200px] w-full cursor-pointer object-cover ${
+            className={`mb-2 h-[250px] w-full cursor-pointer object-cover ${
              !isGrey(index) && "grayscale"
             }`}
            />
@@ -90,7 +124,7 @@ const Results = ({ results }) => {
            <img
             src={result.imgUrl}
             alt="Team2"
-            className={`mb-2 h-[200px] w-full cursor-pointer object-cover ${
+            className={`mb-2 h-[250px] w-full cursor-pointer object-cover ${
              !isGrey(index) && "grayscale"
             }`}
            />
@@ -100,7 +134,30 @@ const Results = ({ results }) => {
       </div>
      )}
     </div>
-    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center"></div>
+    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
+     <FunTip tipText={tipText} />
+     <div
+      onClick={() =>
+       displayMode === "rating"
+        ? setDisplayMode("history")
+        : setDisplayMode("rating")
+      }
+      className="text-lg md:text-xl flex w-full mb-4 justify-center dark:text-slate-900 py-2 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500"
+     >
+      {displayMode === "rating" ? "History" : "Rating"}
+     </div>
+     <Link
+      href={`/${category}/${theme}/rating`}
+      className="text-lg md:text-xl flex w-full mb-4 items-center dark:text-slate-900 justify-center py-2 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500"
+     >
+      <i class="fa-solid fa-trophy mr-2"></i>
+      Overall Rating
+     </Link>
+     <div className="text-lg md:text-xl flex w-full items-center dark:text-slate-900 justify-center py-2 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500">
+      <i class="fa-solid fa-share-nodes mr-2"></i>
+      Share
+     </div>
+    </div>
    </div>
   </>
  );
