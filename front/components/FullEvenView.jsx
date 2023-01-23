@@ -23,21 +23,21 @@ export const FullEvenView = ({
      <div className="flex flex-col text-green-400 text-2xl items-center">
       <div className="mb-1">Clicks:</div>
       <div className="flex items-center">
-       <i class="fa-solid fa-computer-mouse mr-2"></i>
+       <i className="fa-solid fa-computer-mouse mr-2"></i>
        <div>{likes}</div>
       </div>
      </div>
      <div className="flex flex-col text-yellow-400 text-3xl items-center mx-40">
       <div className="mb-1">Wins:</div>
       <div className="flex items-center">
-       <i class="fa-solid fa-trophy mr-2"></i>
+       <i className="fa-solid fa-trophy mr-2"></i>
        <div>{wins}</div>
       </div>
      </div>
      <div className="flex flex-col text-red-400 text-2xl items-center">
       <div className="mb-1">Misses:</div>
       <div className="flex items-center">
-       <i class="fa-solid fa-circle-xmark mr-2"></i>
+       <i className="fa-solid fa-circle-xmark mr-2"></i>
        <div>{dislikes}</div>
       </div>
      </div>

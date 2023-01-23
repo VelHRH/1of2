@@ -11,7 +11,7 @@ import { Game } from "../../../components/Game";
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
  const resTheme = await fetch(
-  `http://localhost:4444/categories/${category}/${theme}`
+  `${process.env.API_HOST}/categories/${category}/${theme}`
  );
  const dataTheme = await resTheme.json();
  if (!dataTheme) {
@@ -20,7 +20,7 @@ export const getServerSideProps = async (context) => {
   };
  }
  const resRating = await fetch(
-  `http://localhost:4444/categories/${category}/${theme}/rating`
+  `${process.env.API_HOST}/categories/${category}/${theme}/rating`
  );
  const dataRating = await resRating.json();
  if (!dataRating) {
@@ -141,11 +141,11 @@ const Theme = ({ theme, rating }) => {
          href={`/${theme.category}/${theme.name}/rating`}
          className="text-xl md:text-2xl flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500 items-center"
         >
-         <i class="fa-solid fa-trophy mr-2"></i>
+         <i className="fa-solid fa-trophy mr-2"></i>
          Rating
         </Link>
         <div className="text-xl md:text-2xl flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500 items-center">
-         <i class="fa-solid fa-share-nodes mr-2"></i>
+         <i className="fa-solid fa-share-nodes mr-2"></i>
          Share
         </div>
 
@@ -169,7 +169,7 @@ const Theme = ({ theme, rating }) => {
         Top in this theme:
        </h1>
        {rating.slice(0, 2).map((r, index) => (
-        <div className="h-[100px] w-full mb-3">
+        <div key={index} className="h-[100px] w-full mb-3">
          <div className="w-full h-full flex justify-between items-center text-2xl">
           <img
            onClick={() => setIsEventOpened(index)}

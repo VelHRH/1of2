@@ -8,9 +8,8 @@ import { FunTip } from "../../../components/FunTip";
 
 export const getServerSideProps = async (context) => {
  const { results, category, theme } = context.query;
- console.log(results);
- const res = await fetch(
-  `http://localhost:4444/categories/${category}/${theme}/results`,
+ await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/results`,
   {
    method: "POST",
    headers: {
@@ -19,7 +18,6 @@ export const getServerSideProps = async (context) => {
    body: results,
   }
  );
- const data = await res.json();
  console.log(data);
  return {
   props: { results: JSON.parse(results) },
@@ -97,7 +95,11 @@ const Results = ({ results }) => {
      </h1>
      {displayMode === "rating" &&
       filterRes(results).map((result, index) => (
-       <ResultElement imgUrl={result.imgUrl} place={index + 1} />
+       <ResultElement
+        key={index + 1}
+        imgUrl={result.imgUrl}
+        place={index + 1}
+       />
       ))}
      {displayMode === "history" && (
       <div className="flex">
@@ -150,11 +152,11 @@ const Results = ({ results }) => {
       href={`/${category}/${theme}/rating`}
       className="text-lg md:text-xl flex w-full mb-4 items-center dark:text-slate-900 justify-center py-2 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500"
      >
-      <i class="fa-solid fa-trophy mr-2"></i>
+      <i className="fa-solid fa-trophy mr-2"></i>
       Overall Rating
      </Link>
      <div className="text-lg md:text-xl flex w-full items-center dark:text-slate-900 justify-center py-2 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500">
-      <i class="fa-solid fa-share-nodes mr-2"></i>
+      <i className="fa-solid fa-share-nodes mr-2"></i>
       Share
      </div>
     </div>

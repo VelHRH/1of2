@@ -21,7 +21,7 @@ export const RatingElement = ({
    </div>
    <div className="flex items-center p-2 rounded-2xl text-xl md:text-2xl">
     {wins}
-    <i class="fa-solid fa-trophy ml-2"></i>
+    <i className="fa-solid fa-trophy ml-2"></i>
    </div>
   </div>
  );

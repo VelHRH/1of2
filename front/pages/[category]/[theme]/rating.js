@@ -10,7 +10,7 @@ import { FullEvenView } from "../../../components/FullEvenView";
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
  const resTheme = await fetch(
-  `http://localhost:4444/categories/${category}/${theme}`
+  `${process.env.API_HOST}/categories/${category}/${theme}`
  );
  const dataTheme = await resTheme.json();
  if (!dataTheme) {
@@ -19,7 +19,7 @@ export const getServerSideProps = async (context) => {
   };
  }
  const resRating = await fetch(
-  `http://localhost:4444/categories/${category}/${theme}/rating`
+  `${process.env.API_HOST}/categories/${category}/${theme}/rating`
  );
  const dataRating = await resRating.json();
  if (!dataRating) {

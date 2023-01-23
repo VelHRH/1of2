@@ -15,7 +15,7 @@ export const Theme = (props) => {
       <div>{author}</div>
       <div className="self-center text-center">{name}</div>
       <div>
-       <i class="fa-regular fa-star mr-1 text-2xl"></i>
+       <i className="fa-regular fa-star mr-1 text-2xl"></i>
        {stars.toFixed(2)}
       </div>
      </div>

@@ -6,7 +6,7 @@ import { SideTop } from "../components/SideTop";
 import { FunTip } from "../components/FunTip";
 
 export const getStaticProps = async () => {
- const res = await fetch("http://localhost:4444/categories");
+ const res = await fetch(`${process.env.API_HOST}/categories`);
  const data = await res.json();
  return {
   props: { categories: data },
