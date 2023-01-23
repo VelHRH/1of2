@@ -35,7 +35,6 @@ export const Game = ({ clickedMode, setIsGame }) => {
   fetch(`http://localhost:4444/categories/${category}/${theme}/rating`)
    .then((res) => res.json())
    .then((data) => {
-    console.log(data);
     setEvents(
      shuffle(data.filter((event) => event.subcategory === theme))
       .slice(0, parseInt(clickedMode))
@@ -58,6 +57,24 @@ export const Game = ({ clickedMode, setIsGame }) => {
 
  const handleChoice = (index) => {
   events[index].curLikes++;
+
+  if (curRound === parseInt(clickedMode - 1)) {
+   router.push(
+    {
+     pathname: `/${category}/${theme}/results`,
+     query: {
+      results: JSON.stringify([
+       ...events,
+       events
+        .slice(curRound * 2 - 2, curRound * 2)
+        .filter((event) => event.curLikes === stage + 1)[0],
+      ]),
+     },
+    },
+    `/${category}/${theme}/results`
+   );
+   setIsGame("loading");
+  }
 
   if (curRound === parseInt(clickedMode) - 2) {
    setEvents((eventList) => [
