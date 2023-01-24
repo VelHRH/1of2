@@ -14,11 +14,11 @@ export const getServerSideProps = async (context) => {
    method: "POST",
    headers: {
     "Content-Type": "application/json;charset=utf-8",
+    Authorization: `${window.localStorage.getItem("token")}`,
    },
    body: results,
   }
  );
- console.log(data);
  return {
   props: { results: JSON.parse(results) },
  };
