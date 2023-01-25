@@ -1,14 +1,33 @@
 import { useState, useEffect } from "react";
 import { Logo } from "./Logo";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const Navbar = ({ isAuth, setIsAuth }) => {
  const [isOpened, setIsOpened] = useState(false);
  const [active, setActive] = useState("categories");
  const [nightMode, setNightMode] = useState(false);
+ const router = useRouter();
+ const { creations, login, register, users, me } = router.query;
+
  useEffect(() => {
   window.localStorage.getItem("theme") && setNightMode(true);
+
+  if (router.asPath.includes("creations")) {
+   setActive("creations");
+  } else if (router.asPath.includes("users")) {
+   setActive("users");
+  } else if (
+   router.asPath.includes("login") ||
+   router.asPath.includes("registration") ||
+   router.asPath.includes("me")
+  ) {
+   setActive("login");
+  } else {
+   setActive("categories");
+  }
  }, []);
+
  useEffect(() => {
   if (nightMode) {
    document.body.classList.add("dark");
@@ -130,7 +149,10 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
         onClick={logout}
         className={`text-xl ${
          isOpened && "p-1"
-        } hover:bg-red-300 duration-300 rounded-xl`}
+        } hover:bg-red-300 duration-300 rounded-xl ${
+         active === "login" &&
+         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
+        }`}
        >
         {isOpened && "logout"}
        </div>
