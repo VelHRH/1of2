@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import Link from "next/link";
 
 const regisration = () => {
   return (
@@ -52,11 +53,17 @@ const regisration = () => {
      ></input>
      <button
       type="submit"
-      className="bg-blue-600 text-slate-50 p-2 px-5 my-5 w-full ease-in duration-200 text-center rounded-full cursor-pointer hover:bg-transparent hover:text-blue-600 border-2 border-blue-600"
+      className="bg-blue-600 text-slate-50 p-2 px-5 mt-5 mb-3 w-full ease-in duration-200 text-center rounded-full cursor-pointer hover:bg-transparent hover:text-blue-600 border-2 border-blue-600"
      >
       Register account
      </button>
     </form>
+    <div className="mb-5 text-lg">
+     Already registered?{" "}
+     <Link href="/login" className="underline">
+      Log in then!
+     </Link>
+    </div>
    </div>
   </div>
   )
