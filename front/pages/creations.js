@@ -1,7 +1,11 @@
+
+
 const Categories = () => {
+  
+
   return (
-    <div>Caregories</div>
-  )
+ <div>Categories</div>
+  );
 }
 
 export default Categories

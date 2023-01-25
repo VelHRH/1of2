@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NumberBtn } from "../../../components/NumberBtn";
+import { useState, useEffect } from "react";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
@@ -34,9 +34,43 @@ export const getServerSideProps = async (context) => {
 
 const Rating = ({ theme, rating }) => {
  const [isEventOpened, setIsEventOpened] = useState(-1);
+ const [items, setItems] = useState([]);
+ const [curPage, setCurPage] = useState(1);
+ const [fetching, setFetching] = useState(false);
+
 
  const handleClick = (index) => {
   setIsEventOpened(index);
+ };
+
+ useEffect(() => {
+  console.log(curPage);
+  console.log(items);
+  setItems([
+    ...items,
+    ...rating.slice(4 * (curPage - 1), 4 * curPage || rating.length),
+   ]);
+  setCurPage(curPage + 1);
+  setFetching(false)
+}, [fetching]);
+
+useEffect(() => {
+  setFetching(true);
+  document.addEventListener("scroll", scrollHandler);
+  return function () {
+   document.removeEventListener("scroll", scrollHandler);
+  };
+  
+ }, []);
+
+ const scrollHandler = (e) => {
+  if (
+   e.target.documentElement.scrollHeight -
+    (e.target.documentElement.scrollTop + window.innerHeight) <
+   50
+  ) {
+   setFetching(true);
+  }
  };
 
  const DataRatings = () => {
@@ -98,7 +132,7 @@ const Rating = ({ theme, rating }) => {
     {rating === undefined ? (
      <div>No events on this subcategory</div>
     ) : (
-      rating.map((event, index) => (
+      items.map((event, index) => (
       <RatingElement
        key={event._id}
        index={index + 1}
