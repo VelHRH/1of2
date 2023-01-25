@@ -26,10 +26,8 @@ const regisration = () => {
     });
     const data = await res.json();
   
-    if ("token" in data) {
-     window.localStorage.setItem("token", data.token);
-    } else {
-     setErr(data.message);
+    if (!("token" in data)) {
+     setErr(data.message || data[0].msg);
      return;
     }
     await router.replace("/login");
@@ -46,52 +44,57 @@ const regisration = () => {
       onChange={(e) => setEmail(e.target.value)}
       value={email}
       className={`bg-slate-100 w-full border-b-2 ${
-        err !== "" && "text-red-600" 
+        err === "Invalid email" || err === "Unable to register" && "text-red-600" 
       } ${
-        err !== ""
+        err === "Invalid email" || err === "Unable to register"
         ? "border-red-600"
         : "border-blue-400"
-      } my-5 outline-none focus:border-blue-600`}
+      } mt-5 mb-3 outline-none focus:border-blue-600`}
      ></input>
+     {err === "Invalid email" && <div className='text-sm text-red-600'>{err}</div>}
+     {err === "Unable to register" && <div className='text-sm text-red-600'>Unable to register this email</div>}
      <input
       type="text"
       placeholder="Nickname..."
       onChange={(e) => setName(e.target.value)}
       value={name}
       className={`bg-slate-100 w-full border-b-2 ${
-        err !== "" && "text-red-600" 
+        err === "At least 3 caracters in name" && "text-red-600" 
       } ${
-        err !== ""
+        err === "At least 3 caracters in name"
         ? "border-red-600"
         : "border-blue-400"
-      } my-5 outline-none focus:border-blue-600`}
+      } mt-7 mb-3 outline-none focus:border-blue-600`}
      ></input>
+     {err === "At least 3 caracters in name" && <div className='text-sm text-red-600'>{err}</div>}
      <input
       type="password"
       placeholder="Password..."
        onChange={(e) => setPassword(e.target.value)}
       value={password}
       className={`bg-slate-100 w-full border-b-2 ${
-        err !== "" && "text-red-600" 
+        err === "Password should be at least 8 symbols long" && "text-red-600" 
       } ${
-        err !== "" 
+        err === "Password should be at least 8 symbols long" 
         ? "border-red-600"
         : "border-blue-400"
-      } my-5 outline-none focus:border-blue-600`}
+      } mt-7 mb-3 outline-none focus:border-blue-600`}
      ></input>
+     {err === "Password should be at least 8 symbols long" && <div className='text-sm text-red-600'>{err}</div>}
      <input
       type="text"
       placeholder="Avatar URL... (optional)"
       onChange={(e) => setImgurl(e.target.value)}
       value={imgurl}
       className={`bg-slate-100 w-full border-b-2 ${
-        err !== "" && "text-red-600"
+        err === "Not an URL" && "text-red-600"
       } ${
-        err !== ""
+        err === "Not an URL"
         ? "border-red-600"
         : "border-blue-400"
-      } my-5 outline-none focus:border-blue-600`}
+      } mt-7 mb-3 outline-none focus:border-blue-600`}
      ></input>
+      {err === "Not an URL" && <div className='text-sm text-red-600'>{err}</div>}
      <button
       type="submit"
       className="bg-blue-600 text-slate-50 p-2 px-5 mt-5 mb-3 w-full ease-in duration-200 text-center rounded-full cursor-pointer hover:bg-transparent hover:text-blue-600 border-2 border-blue-600"
