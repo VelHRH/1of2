@@ -7,8 +7,12 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
  const [active, setActive] = useState("categories");
  const [nightMode, setNightMode] = useState(false);
  useEffect(() => {
+  window.localStorage.getItem("theme") && setNightMode(true);
+ }, []);
+ useEffect(() => {
   if (nightMode) {
    document.body.classList.add("dark");
+   window.localStorage.setItem("theme", "dark");
   } else {
    document.body.classList.remove("dark");
   }
@@ -84,7 +88,10 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
      } `}
     >
      <div
-      onClick={() => setNightMode(!nightMode)}
+      onClick={() => {
+       window.localStorage.removeItem("theme");
+       setNightMode(!nightMode);
+      }}
       className={`flex items-center mb-7 ${
        isOpened ? "self-start" : "self-center"
       }`}

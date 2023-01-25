@@ -14,6 +14,10 @@ function MyApp({ Component, pageProps }) {
     });
     const data = await res.json();
     data.message ? setIsAuth() : setIsAuth(data.imgUrl);
+    {
+     window.localStorage.getItem("theme") &&
+      document.body.classList.add("dark");
+    }
    } catch (err) {
     console.log(err);
     setIsAuth();
