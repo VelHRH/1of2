@@ -8,17 +8,7 @@ import { FunTip } from "../../../components/FunTip";
 
 export const getServerSideProps = async (context) => {
  const { results, category, theme } = context.query;
- await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/results`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-   body: results,
-  }
- );
+
  return {
   props: { results: JSON.parse(results) },
  };
@@ -31,6 +21,15 @@ const Results = ({ results }) => {
  const { category, theme } = router.query;
 
  useEffect(() => {
+  fetch(`${process.env.API_HOST}/categories/${category}/${theme}/results`, {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `${window.localStorage.getItem("token")}`,
+   },
+   body: JSON.stringify(results),
+  });
+
   if (results[results.length - 1].wins == 0) {
    setTipText(
     `Wow! You've got an interesting taste, as this is the first win for "${

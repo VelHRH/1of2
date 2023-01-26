@@ -32,7 +32,7 @@ export const Game = ({ clickedMode, setIsGame }) => {
  useEffect(() => {
   document.title = "Game";
   setIsLoading(true);
-  fetch(`http://localhost:4444/categories/${category}/${theme}/rating`)
+  fetch(`${process.env.API_HOST}/categories/${category}/${theme}/rating`)
    .then((res) => res.json())
    .then((data) => {
     setEvents(

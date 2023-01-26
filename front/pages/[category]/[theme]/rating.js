@@ -44,8 +44,6 @@ const Rating = ({ theme, rating }) => {
  };
 
  useEffect(() => {
-  console.log(curPage);
-  console.log(items);
   setItems([
     ...items,
     ...rating.slice(4 * (curPage - 1), 4 * curPage || rating.length),

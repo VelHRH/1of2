@@ -10,7 +10,7 @@ const login = () => {
 
  const submit = async (e) => {
   e.preventDefault();
-  const res = await fetch(`http://localhost:4444/login`, {
+  const res = await fetch(`${process.env.API_HOST}/login`, {
    method: "POST",
    headers: {
     "Content-Type": "application/json",
