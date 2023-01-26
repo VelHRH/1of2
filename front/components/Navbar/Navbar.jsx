@@ -137,10 +137,13 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
        <div className="text-xl">{isOpened && "login/register"}</div>
       </Link>
      ) : (
-      <div className="flex justify-start items-center w-full">
+      <Link
+       href={`/me/${isAuth.data._id}`}
+       className="flex justify-start items-center w-full"
+      >
        <div className={`w-[40px] h-[40px] ${isOpened && "mr-2"}`}>
         <img
-         src={isAuth}
+         src={isAuth.data.imgUrl}
          alt="Profile"
          className="w-full h-full object-cover rounded-full"
         />
@@ -156,7 +159,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
        >
         {isOpened && "logout"}
        </div>
-      </div>
+      </Link>
      )}
     </div>
    </div>

@@ -7,13 +7,13 @@ function MyApp({ Component, pageProps }) {
  useEffect(() => {
   (async () => {
    try {
-    const res = await fetch("http://localhost:4444/me", {
+    const res = await fetch(`${process.env.API_HOST}/me`, {
      headers: {
       Authorization: `${window.localStorage.getItem("token")}`,
      },
     });
     const data = await res.json();
-    data.message ? setIsAuth() : setIsAuth(data.imgUrl);
+    data.message ? setIsAuth() : setIsAuth({ data: data });
     {
      window.localStorage.getItem("theme") &&
       document.body.classList.add("dark");
