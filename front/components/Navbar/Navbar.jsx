@@ -8,19 +8,18 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
  const [active, setActive] = useState("categories");
  const [nightMode, setNightMode] = useState(false);
  const router = useRouter();
- const { creations, login, register, users, me } = router.query;
 
  useEffect(() => {
   window.localStorage.getItem("theme") && setNightMode(true);
 
   if (router.asPath.includes("creations")) {
    setActive("creations");
-  } else if (router.asPath.includes("users")) {
-   setActive("users");
+  } else if (router.asPath.includes("community")) {
+   setActive("community");
   } else if (
    router.asPath.includes("login") ||
    router.asPath.includes("registration") ||
-   router.asPath.includes("me")
+   router.asPath.includes("user")
   ) {
    setActive("login");
   } else {
@@ -45,6 +44,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
   if (window.confirm("You sure you want to log out?")) {
    setIsAuth();
    window.localStorage.removeItem("token");
+   router.reload();
   }
  };
  return (
@@ -89,15 +89,15 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       </Link>
       <div
        onClick={() => {
-        setActive("users");
+        setActive("community");
        }}
        className={`flex items-center mb-7 ${
-        active === "users" &&
+        active === "community" &&
         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
        }`}
       >
        <i className={`fa-solid fa-user-group ${isOpened && "mr-2"}`}></i>
-       <div className="text-xl">{isOpened && "users"}</div>
+       <div className="text-xl">{isOpened && "community"}</div>
       </div>
      </div>
     </div>
@@ -138,7 +138,10 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       </Link>
      ) : (
       <Link
-       href={`/me/${isAuth.data._id}`}
+       href={`/user/${isAuth.data._id}`}
+       onClick={() => {
+        setActive("login");
+       }}
        className="flex justify-start items-center w-full"
       >
        <div className={`w-[40px] h-[40px] ${isOpened && "mr-2"}`}>
@@ -150,11 +153,9 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
        </div>
        <div
         onClick={logout}
-        className={`text-xl ${
-         isOpened && "p-1"
-        } hover:bg-red-300 duration-300 rounded-xl ${
+        className={`text-xl ${isOpened && "p-1"} ${
          active === "login" &&
-         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
+         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600 hover:text-red-500 duration-300"
         }`}
        >
         {isOpened && "logout"}
