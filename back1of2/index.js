@@ -27,6 +27,7 @@ app.post('/categories/:name/:id/results', checkAuth, EventController.results);
 app.post('/register', registerValidation, UserController.register);
 app.post('/login', UserController.login);
 app.get('/me', checkAuth, UserController.me);
+app.post('/me', UserController.me);
 
 app.listen(4444, (err) => {
   if (err) {

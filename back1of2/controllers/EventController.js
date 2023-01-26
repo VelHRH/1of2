@@ -25,16 +25,16 @@ export const getRating = async (req, res) => {
 export const results = async (req, res) => {
  try {
   let sortedReq = [];
-  for (let i = req.body.res.length - 1; i >= 0; i--) {
+  for (let i = req.body.length - 1; i >= 0; i--) {
    let isIn = 0;
    for (let j = 0; j < sortedReq.length; j++) {
-    if (req.body.res[i].name === sortedReq[j].name) {
+    if (req.body[i].name === sortedReq[j].name) {
      isIn++;
      break;
     }
    }
    if (isIn == 0) {
-    sortedReq.push(req.body.res[i]);
+    sortedReq.push(req.body[i]);
    }
   }
   for (let i = 0; i < sortedReq.length; i++) {
@@ -55,7 +55,9 @@ export const results = async (req, res) => {
      }
     );
     const user = await UsersModel.findById(req.userId);
-    user.winners.unshift({ ...sortedReq[i], date: new Date() });
+    
+    (user.winners.length==0 || Date().toString().slice(0,22) !== user.winners[0].date.toString().slice(0,22)) && user.winners.unshift({ ...sortedReq[i], date: new Date() });
+     
     await user.save();
    } else {
     EventModel.updateOne(
@@ -68,7 +70,7 @@ export const results = async (req, res) => {
       if (err) {
        console.log(err);
        return res.status(500).json({
-        message: "Error with results",
+        message: "Error with results (user)",
        });
       }
      }
@@ -79,7 +81,7 @@ export const results = async (req, res) => {
  } catch (err) {
   console.log(err);
   return res.status(500).json({
-   message: "Error with results",
+   message: "Error with results (other)",
   });
  }
 };

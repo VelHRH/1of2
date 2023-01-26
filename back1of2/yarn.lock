@@ -1564,6 +1564,11 @@
   dependencies:
     "has-flag" "^3.0.0"
 
+"tailwind-gradient-mask-image@^1.0.0":
+  "integrity" "sha512-eZJhn6wHZ0Irfpq5sm0ErewH6IC82gqjfVsDQ7MYrJcfTgepOoTI6EryLppNPoZds4EeD6/H0WrysT8HE90H5g=="
+  "resolved" "https://registry.npmjs.org/tailwind-gradient-mask-image/-/tailwind-gradient-mask-image-1.0.0.tgz"
+  "version" "1.0.0"
+
 "to-regex-range@^5.0.1":
   "integrity" "sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ=="
   "resolved" "https://registry.npmjs.org/to-regex-range/-/to-regex-range-5.0.1.tgz"
