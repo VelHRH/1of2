@@ -12,7 +12,7 @@ export const getServerSideProps = async (context) => {
  const { category } = context.params;
  const res = await fetch(`${process.env.API_HOST}/categories/${category}`);
  const data = await res.json();
- if (!data) {
+ if (data.length===0) {
   return {
    notFound: true,
   };

@@ -13,7 +13,7 @@ export const getServerSideProps = async (context) => {
   `${process.env.API_HOST}/categories/${category}/${theme}`
  );
  const dataTheme = await resTheme.json();
- if (!dataTheme) {
+ if (dataTheme.message) {
   return {
    notFound: true,
   };

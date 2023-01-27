@@ -14,7 +14,7 @@ export const getServerSideProps = async (context) => {
   `${process.env.API_HOST}/categories/${category}/${theme}`
  );
  const dataTheme = await resTheme.json();
- if (!dataTheme) {
+ if (dataTheme.message) {
   return {
    notFound: true,
   };
@@ -168,19 +168,20 @@ const Theme = ({ theme, rating }) => {
        <h1 className="text-3xl mb-5 mt-16 dark:text-slate-50">
         Top in this theme:
        </h1>
-       {rating.slice(0, 2).map((r, index) => (
-        <div key={index} className="h-[100px] w-full mb-3">
-         <div className="w-full h-full flex justify-between items-center text-2xl">
-          <img
-           onClick={() => setIsEventOpened(index)}
-           src={r.imgUrl}
-           alt="Top"
-           className="h-full aspect-square object-cover rounded-full cursor-pointer"
-          />
-          <h1 className="dark:text-slate-50">{r.wins} wins</h1>
+       {rating.length > 1 &&
+        rating.slice(0, 2).map((r, index) => (
+         <div key={index} className="h-[100px] w-full mb-3">
+          <div className="w-full h-full flex justify-between items-center text-2xl">
+           <img
+            onClick={() => setIsEventOpened(index)}
+            src={r.imgUrl}
+            alt="Top"
+            className="h-full aspect-square object-cover rounded-full cursor-pointer"
+           />
+           <h1 className="dark:text-slate-50">{r.wins} wins</h1>
+          </div>
          </div>
-        </div>
-       ))}
+        ))}
       </div>
      </div>
     </>
