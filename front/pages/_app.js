@@ -1,6 +1,8 @@
 import "../styles/globals.css";
 import { Layout } from "../components/Layout";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { QueryClient, QueryClientProvider, Hydrate } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 function MyApp({ Component, pageProps }) {
  const [isAuth, setIsAuth] = useState();
@@ -25,10 +27,17 @@ function MyApp({ Component, pageProps }) {
   })();
  }, []);
 
+ const queryClient = useRef(new QueryClient());
+
  return (
-  <Layout isAuth={isAuth} setIsAuth={setIsAuth}>
-   <Component {...pageProps} />
-  </Layout>
+  <QueryClientProvider client={queryClient.current}>
+   <Hydrate state={pageProps.dehydratedState}>
+    <Layout isAuth={isAuth} setIsAuth={setIsAuth}>
+     <Component {...pageProps} />
+    </Layout>
+   </Hydrate>
+   <ReactQueryDevtools />
+  </QueryClientProvider>
  );
 }
 

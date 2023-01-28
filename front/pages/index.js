@@ -4,17 +4,29 @@ import { Search } from "../components/Search";
 import { useState } from "react";
 import { SideTop } from "../components/SideTop";
 import { FunTip } from "../components/FunTip";
+import { useQuery, QueryClient, dehydrate } from "react-query";
+
+const getCategories = async () => {
+ const res = await fetch(`${process.env.API_HOST}/categories`);
+ return res.json();
+};
 
 export const getStaticProps = async () => {
- const res = await fetch(`${process.env.API_HOST}/categories`);
- const data = await res.json();
+ const queryClient = new QueryClient();
+
+ await queryClient.prefetchQuery("categories", getCategories);
+
  return {
-  props: { categories: data },
+  props: { dehydratedState: dehydrate(queryClient) },
  };
 };
 
-export default function Home({ categories }) {
+export default function Home() {
  const [searchVal, setSearchVal] = useState("");
+
+ const { data, isLoading } = useQuery("categories", getCategories);
+
+ if (isLoading) return <div>Loading...</div>;
 
  return (
   <div className="w-full flex">
@@ -28,7 +40,7 @@ export default function Home({ categories }) {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-3">
-     {categories.map(
+     {data.map(
       (category) =>
        category.name.slice(0, searchVal.length) === searchVal && (
         <Category key={category._id}>{category.name}</Category>
@@ -46,7 +58,7 @@ export default function Home({ categories }) {
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
       Top categories:
      </h1>
-     {[...categories]
+     {[...data]
       .sort((a, b) => b.subcategories.length - a.subcategories.length)
       .slice(0, 5)
       .map((category, index) => (
