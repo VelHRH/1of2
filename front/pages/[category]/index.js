@@ -7,22 +7,33 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { BackBtn } from "../../components/BackBtn";
 import { SideTop } from "../../components/SideTop";
+import { useQuery, QueryClient, dehydrate } from "react-query";
+
+const getCategory = async (name) => {
+  const res = await fetch(`${process.env.API_HOST}/categories/${name}`);
+  return res.json();
+}
 
 export const getServerSideProps = async (context) => {
  const { category } = context.params;
- const res = await fetch(`${process.env.API_HOST}/categories/${category}`);
- const data = await res.json();
+
+ const queryClient = new QueryClient();
+
+ await queryClient.prefetchQuery(["category", category], () => getCategory(category));
+ 
+ const data = await getCategory(category);
+ 
  if (data.length===0) {
   return {
    notFound: true,
   };
  }
  return {
-  props: { themes: data },
+  props: { dehydratedState: dehydrate(queryClient) },
  };
 };
 
-const Category = ({ themes }) => {
+const Category = () => {
  const [searchVal, setSearchVal] = useState("");
 
  const router = useRouter();
@@ -33,6 +44,10 @@ const Category = ({ themes }) => {
   arr.map((item) => (sum += item.stars));
   return sum / arr.length;
  };
+
+ const {data, isLoading} = useQuery(["category", category], () => getCategory(category));
+
+ if (isLoading) return <div>Loading...</div>
 
  return (
   <div className="w-full flex">
@@ -50,7 +65,7 @@ const Category = ({ themes }) => {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-2">
-     {themes.map(
+     {data.map(
       (theme) =>
        theme.name.slice(0, searchVal.length).toUpperCase() ===
         searchVal.toUpperCase() && (
@@ -75,7 +90,7 @@ const Category = ({ themes }) => {
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
       Popular themes here:
      </h1>
-     {[...themes]
+     {[...data]
       .sort((a, b) => b.stars.length - a.stars.length)
       .slice(0, 5)
       .map((theme, index) => (
