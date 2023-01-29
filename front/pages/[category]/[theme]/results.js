@@ -6,9 +6,23 @@ import Head from "next/head";
 import { ResultElement } from "../../../components/ResultElement";
 import { FunTip } from "../../../components/FunTip";
 
-export const getServerSideProps = async (context) => {
- const { results, category, theme } = context.query;
+const postResults = (category, theme, results) => {
+ fetch(`${process.env.API_HOST}/categories/${category}/${theme}/results`, {
+  method: "POST",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify(results),
+ });
+};
 
+export const getServerSideProps = async (context) => {
+ const { results } = await context.query;
+ if (results === undefined)
+  return {
+   notFound: true,
+  };
  return {
   props: { results: JSON.parse(results) },
  };
@@ -21,15 +35,7 @@ const Results = ({ results }) => {
  const { category, theme } = router.query;
 
  useEffect(() => {
-  fetch(`${process.env.API_HOST}/categories/${category}/${theme}/results`, {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-   body: JSON.stringify(results),
-  });
-
+  postResults(category, theme, results);
   if (results[results.length - 1].wins == 0) {
    setTipText(
     `Wow! You've got an interesting taste, as this is the first win for "${
@@ -76,6 +82,7 @@ const Results = ({ results }) => {
   }
   return countEvent > countNeighbour;
  };
+
  return (
   <>
    <Head>
