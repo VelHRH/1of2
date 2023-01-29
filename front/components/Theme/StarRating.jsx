@@ -3,7 +3,7 @@ import { useState } from "react";
 export const StarRating = ({ yourRating, setYourRating }) => {
  const [hoveredRating, setHoveredRating] = useState(0);
  return (
-  <dix className="flex">
+  <div className="flex">
    <h1 className="text-3xl mb-3 dark:text-slate-50 mr-5">
     {yourRating !== 0 ? "" : "Rate this:"}
    </h1>
@@ -59,6 +59,6 @@ export const StarRating = ({ yourRating, setYourRating }) => {
      }`}
     ></i>
    </div>
-  </dix>
+  </div>
  );
 };
