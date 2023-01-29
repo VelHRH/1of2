@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 
 const Result = () => {
  const router = useRouter();
- const { id } = router.query;
- return <div>{id}</div>;
+ const { result } = router.query;
+ return <div>{result}</div>;
 };
 
 export default Result;
