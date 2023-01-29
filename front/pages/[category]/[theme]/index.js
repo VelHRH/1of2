@@ -36,7 +36,6 @@ export const getServerSideProps = async (context) => {
  );
 
  const data = await getTheme(category, theme);
- console.log(data);
 
  if (data.message) {
   return {

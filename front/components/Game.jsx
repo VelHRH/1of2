@@ -1,5 +1,23 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import jwt_decode from "jwt-decode";
+
+const postResults = async (results, user, category, theme) => {
+ const res = await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/results`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+   },
+   body: JSON.stringify({
+    results,
+    user,
+   }),
+  }
+ );
+ return res.json();
+};
 
 export const Game = ({ clickedMode, setIsGame }) => {
  const router = useRouter();
@@ -59,21 +77,20 @@ export const Game = ({ clickedMode, setIsGame }) => {
   events[index].curLikes++;
 
   if (curRound === parseInt(clickedMode - 1)) {
-   router.push(
-    {
-     pathname: `/${category}/${theme}/results`,
-     query: {
-      results: JSON.stringify([
-       ...events,
-       events
-        .slice(curRound * 2 - 2, curRound * 2)
-        .filter((event) => event.curLikes === stage + 1)[0],
-      ]),
-     },
-    },
-    `/${category}/${theme}/results`
-   );
    setIsGame("loading");
+   postResults(
+    [
+     ...events,
+     events
+      .slice(curRound * 2 - 2, curRound * 2)
+      .filter((event) => event.curLikes === stage + 1)[0],
+    ],
+    window.localStorage.getItem("token")
+     ? jwt_decode(window.localStorage.getItem("token"))._id
+     : null,
+    category,
+    theme
+   ).then((res) => router.push(`/${category}/${theme}/${res._id}`));
   }
 
   if (curRound === parseInt(clickedMode) - 2) {
