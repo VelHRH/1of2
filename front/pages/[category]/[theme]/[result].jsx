@@ -57,7 +57,7 @@ const Result = () => {
     `Did you know? It's just ${data[data.length - 1].wins + 1}${
      data[0].results[data[0].results.length - 1].wins + 1 === 2
       ? "nd"
-      : data[0].results[dat.results.length - 1].wins + 1 === 3
+      : data[0].results[data[0].results.length - 1].wins + 1 === 3
       ? "rd"
       : "th"
     } win for "${data[0].results[data[0].results.length - 1].name}" here.`
@@ -67,7 +67,6 @@ const Result = () => {
 
  const filterRes = (res) => {
   let sortedArray = [];
-  console.log(res);
   for (let i = res.length - 1; i >= 0; i--) {
    let isMatch = false;
    for (let j = 0; j < sortedArray.length; j++) {
@@ -82,14 +81,15 @@ const Result = () => {
  };
 
  const isGrey = (index) => {
-  const eventName = data[0].results[index].name;
+  const eventName = data[0].history[index].name;
+  console.log(index);
   const neighbourName =
    index % 2 === 0
-    ? data[0].results[index + 1].name
-    : data[0].results[index - 1].name;
+    ? data[0].history[index + 1].name
+    : data[0].history[index - 1].name;
   let countEvent = 0,
    countNeighbour = 0;
-  for (const event of data[0].results) {
+  for (const event of data[0].history) {
    if (eventName === event.name) countEvent++;
    if (neighbourName === event.name) countNeighbour++;
   }
@@ -114,20 +114,22 @@ const Result = () => {
       Your results for {theme}
      </h1>
      {displayMode === "rating" &&
-      filterRes(data[0].results).map((result, index) => (
-       <ResultElement
-        key={index + 1}
-        imgUrl={result.imgUrl}
-        place={index + 1}
-       />
-      ))}
+      filterRes(data[0].results)
+       .reverse()
+       .map((result, index) => (
+        <ResultElement
+         key={index + 1}
+         imgUrl={result.imgUrl}
+         place={index + 1}
+        />
+       ))}
      {displayMode === "history" && (
       <div className="flex">
        <div className="w-1/2">
-        {data[0].results.map(
+        {data[0].history.map(
          (result, index) =>
           index % 2 === 0 &&
-          index !== data[0].results.length - 1 && (
+          index !== data[0].history.length - 1 && (
            <img
             src={result.imgUrl}
             alt="Team1"
@@ -139,10 +141,10 @@ const Result = () => {
         )}
        </div>
        <div className="w-1/2">
-        {data[0].results.map(
+        {data[0].history.map(
          (result, index) =>
           index % 2 === 1 &&
-          index !== data[0].results.length - 1 && (
+          index !== data[0].history.length - 1 && (
            <img
             src={result.imgUrl}
             alt="Team2"
