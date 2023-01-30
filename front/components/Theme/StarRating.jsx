@@ -1,59 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const StarRating = ({ yourRating, setYourRating }) => {
+export const StarRating = ({
+ yourRating,
+ setYourRating,
+ category,
+ theme,
+ rating,
+ starClickHandler,
+}) => {
  const [hoveredRating, setHoveredRating] = useState(0);
  return (
   <div className="flex">
    <h1 className="text-3xl mb-3 dark:text-slate-50 mr-5">
-    {yourRating !== 0 ? "" : "Rate this:"}
+    {rating !== 0 ? "" : "Rate this:"}
    </h1>
    <div className="text-slate-900 dark:text-slate-50 cursor-pointer">
     <i
-     onMouseOver={() => setHoveredRating(1)}
-     onMouseOut={() => setHoveredRating(0)}
-     onClick={() => setYourRating(1)}
+     onMouseOver={() => rating === 0 && setHoveredRating(1)}
+     onMouseOut={() => rating === 0 && setHoveredRating(0)}
+     onClick={() => rating === 0 && starClickHandler(1)}
      className={`fa-star mr-1 text-3xl ${
-      hoveredRating >= 1 || yourRating >= 1
+      hoveredRating >= 1 || rating >= 1
        ? "text-sky-500 fa-solid"
        : "text-slate-900 dark:text-slate-50 fa-regular"
      }`}
     ></i>
     <i
-     onMouseOver={() => setHoveredRating(2)}
-     onMouseOut={() => setHoveredRating(0)}
-     onClick={() => setYourRating(2)}
+     onMouseOver={() => rating === 0 && setHoveredRating(2)}
+     onMouseOut={() => rating === 0 && setHoveredRating(0)}
+     onClick={() => rating === 0 && starClickHandler(2)}
      className={`fa-star mr-1 text-3xl ${
-      hoveredRating >= 2 || yourRating >= 2
+      hoveredRating >= 2 || rating >= 2
        ? "text-sky-500 fa-solid"
        : "text-slate-900 dark:text-slate-50 fa-regular"
      }`}
     ></i>
     <i
-     onMouseOver={() => setHoveredRating(3)}
-     onMouseOut={() => setHoveredRating(0)}
-     onClick={() => setYourRating(3)}
+     onMouseOver={() => rating === 0 && setHoveredRating(3)}
+     onMouseOut={() => rating === 0 && setHoveredRating(0)}
+     onClick={() => rating === 0 && starClickHandler(3)}
      className={`fa-star mr-1 text-3xl ${
-      hoveredRating >= 3 || yourRating >= 3
+      hoveredRating >= 3 || rating >= 3
        ? "text-sky-500 fa-solid"
        : "text-slate-900 dark:text-slate-50 fa-regular"
      }`}
     ></i>
     <i
-     onMouseOver={() => setHoveredRating(4)}
-     onMouseOut={() => setHoveredRating(0)}
-     onClick={() => setYourRating(4)}
+     onMouseOver={() => rating === 0 && setHoveredRating(4)}
+     onMouseOut={() => rating === 0 && setHoveredRating(0)}
+     onClick={() => rating === 0 && starClickHandler(4)}
      className={`fa-star mr-1 text-3xl ${
-      hoveredRating >= 4 || yourRating >= 4
+      hoveredRating >= 4 || rating >= 4
        ? "text-sky-500 fa-solid"
        : "text-slate-900 dark:text-slate-50 fa-regular"
      }`}
     ></i>
     <i
-     onMouseOver={() => setHoveredRating(5)}
-     onMouseOut={() => setHoveredRating(0)}
-     onClick={() => setYourRating(5)}
+     onMouseOver={() => rating === 0 && setHoveredRating(5)}
+     onMouseOut={() => rating === 0 && setHoveredRating(0)}
+     onClick={() => rating === 0 && starClickHandler(5)}
      className={`fa-star mr-1 text-3xl ${
-      hoveredRating === 5 || yourRating >= 5
+      hoveredRating === 5 || rating >= 5
        ? "text-sky-500 fa-solid"
        : "text-slate-900 dark:text-slate-50 fa-regular"
      }`}

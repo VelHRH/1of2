@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NumberBtn } from "../../../components/NumberBtn";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
+import jwt_decode from "jwt-decode";
 import ChartRatings from "../../../components/ChartRatings";
 import { StarRating } from "../../../components/Theme/StarRating";
 import { FullEvenView } from "../../../components/FullEvenView";
 import { Game } from "../../../components/Game";
-import { useQuery, QueryClient, dehydrate } from "react-query";
+import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import { useRouter } from "next/router";
 
 const getTheme = async (category, theme) => {
@@ -22,6 +23,20 @@ const getRating = async (category, theme) => {
   `${process.env.API_HOST}/categories/${category}/${theme}/rating`
  );
  return res.json();
+};
+
+const giveStar = async (category, theme, r) => {
+ console.log(r);
+ await fetch(`${process.env.API_HOST}/categories/${category}/${theme}`, {
+  method: "POST",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+   stars: r,
+  }),
+ });
 };
 
 export const getServerSideProps = async (context) => {
@@ -58,8 +73,19 @@ const Theme = () => {
   getRating(category, theme)
  );
 
- const [clickedMode, setClickedMode] = useState("8");
+ const starMutation = useMutation((req) =>
+  giveStar(req.category, req.theme, req.r)
+ );
+
+ const starClickHandler = (r) => {
+  console.log({ category, theme, r });
+
+  starMutation.mutate({ category, theme, r });
+ };
+
  const [yourRating, setYourRating] = useState(0);
+ const [clickedMode, setClickedMode] = useState("8");
+ const [isRating, setIsRating] = useState(false);
  const [isEventOpened, setIsEventOpened] = useState(-1);
  const [isGame, setIsGame] = useState("false");
  const handleModeChoice = (mode) => {
@@ -97,6 +123,10 @@ const Theme = () => {
   ];
  };
 
+ useEffect(() => {
+  window.localStorage.getItem("token") && setIsRating(true);
+ }, []);
+
  return (
   <>
    <Head>
@@ -131,7 +161,22 @@ const Theme = () => {
         <h1 className="text-4xl mb-7 dark:text-slate-50 capitalize">
          {themeData.data[0].name}
         </h1>
-        <StarRating yourRating={yourRating} setYourRating={setYourRating} />
+        {isRating && (
+         <StarRating
+          category={category}
+          theme={theme}
+          yourRating={yourRating}
+          setYourRating={setYourRating}
+          starClickHandler={starClickHandler}
+          rating={
+           themeData.data[0].stars.find(
+            (element) =>
+             element.user ===
+             jwt_decode(window.localStorage.getItem("token"))._id
+           )?.stars || 0
+          }
+         />
+        )}
        </div>
        <img
         src={themeData.data[0].imgUrl}

@@ -27,15 +27,7 @@ function MyApp({ Component, pageProps }) {
   })();
  }, []);
 
- const queryClient = useRef(
-  new QueryClient({
-   defaultOptions: {
-    queries: {
-     refetchOnWindowFocus: false,
-    },
-   },
-  })
- );
+ const queryClient = useRef(new QueryClient());
 
  return (
   <QueryClientProvider client={queryClient.current}>
