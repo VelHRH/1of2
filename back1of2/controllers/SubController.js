@@ -24,3 +24,24 @@ export const getOne = async (req, res) => {
   }
 }
 
+export const giveStars = async (req, res) => {
+  try {
+    const user = await req.userId;
+    const theme = await ThemeModel.find(
+      {name: req.params.id}
+    );
+    for (let i  in theme[0].stars){
+      if (theme[0].stars[i].user === user){
+        return  res.status(404).json({ message: "Already rated by you" });
+      }
+    }
+    await ThemeModel.findOneAndUpdate(
+      {name: req.params.id}, 
+      {$push: {stars: {user: user, stars: req.body.stars}}}, 
+    );
+    return res.json({success: true});
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to rate the theme" });
+  }
+ };

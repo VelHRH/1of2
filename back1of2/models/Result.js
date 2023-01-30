@@ -5,6 +5,10 @@ const ResultSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  history: {
+    type: Array,
+    required: true,
+  },
   user:{
     type: String
   }

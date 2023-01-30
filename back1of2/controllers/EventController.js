@@ -13,7 +13,7 @@ export const getRating = async (req, res) => {
    if (events.length === 0) {
     return res
      .status(404)
-     .json({ message: "No event's yet for such subcategory" });
+     .json({ message: "No events yet for such subcategory" });
    }
    res.json(events);
   }).sort({ wins: -1 });
@@ -22,6 +22,27 @@ export const getRating = async (req, res) => {
   res.status(500).json({ message: "Unable to get category" });
  }
 };
+
+export const getResult = async (req, res) => {
+  try {
+   const result = req.params.result;
+   ResultModel.find({ _id: result }, (err, result) => {
+    if (err) {
+     console.log(err);
+     return res.status(500).json({ message: "Unable to get the results" });
+    }
+    if (!result) {
+     return res
+      .status(404)
+      .json({ message: "No results for such url" });
+    }
+    res.json(result);
+   });
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to get the results" });
+  }
+ };
 
 export const results = async (req, res) => {
  try {
@@ -41,6 +62,7 @@ export const results = async (req, res) => {
   }
   const doc = new ResultModel({
     results: sortedReq,
+    history: req.body.results,
     user: user
   })
 
