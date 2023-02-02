@@ -8,7 +8,7 @@ const DonutChart = ({ data }) => {
   if (ref.current) {
    drawChart(ref.current, data);
   }
- }, [ref]);
+ }, [data]);
 
  return (
   <div className="container">

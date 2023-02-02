@@ -29,15 +29,7 @@ const drawChart = (element, data) => {
   .append("path")
   .attr("d", arcGenerator)
   .style("fill", (d, i) => colors[i % data.length])
-  .transition()
-  .duration(700)
-  .attrTween("d", function (d) {
-   const i = d3.interpolate(d.startAngle, d.endAngle);
-   return function (t) {
-    d.endAngle = i(t);
-    return arcGenerator(d);
-   };
-  });
+;
 
  arcs
   .append("text")

@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const StarRating = ({
- yourRating,
- setYourRating,
- category,
- theme,
- rating,
- starClickHandler,
-}) => {
+export const StarRating = ({ rating, starClickHandler }) => {
  const [hoveredRating, setHoveredRating] = useState(0);
  return (
   <div className="flex">

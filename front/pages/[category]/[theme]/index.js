@@ -26,7 +26,6 @@ const getRating = async (category, theme) => {
 };
 
 const giveStar = async (category, theme, r) => {
- console.log(r);
  await fetch(`${process.env.API_HOST}/categories/${category}/${theme}`, {
   method: "POST",
   headers: {
@@ -73,17 +72,15 @@ const Theme = () => {
   getRating(category, theme)
  );
 
- const starMutation = useMutation((req) =>
-  giveStar(req.category, req.theme, req.r)
- );
+ const starMutation = useMutation(async (req) => {
+  await giveStar(req.category, req.theme, req.r);
+  await themeData.refetch();
+ });
 
- const starClickHandler = (r) => {
-  console.log({ category, theme, r });
-
+ const starClickHandler = async (r) => {
   starMutation.mutate({ category, theme, r });
  };
 
- const [yourRating, setYourRating] = useState(0);
  const [clickedMode, setClickedMode] = useState("8");
  const [isRating, setIsRating] = useState(false);
  const [isEventOpened, setIsEventOpened] = useState(-1);
@@ -145,11 +142,11 @@ const Theme = () => {
      {isEventOpened > -1 && (
       <FullEvenView
        setIsEventOpened={setIsEventOpened}
-       link={rating[isEventOpened].imgUrl}
-       name={rating[isEventOpened].name}
-       wins={rating[isEventOpened].wins}
-       likes={rating[isEventOpened].likes}
-       dislikes={rating[isEventOpened].dislikes}
+       link={ratingData.data[isEventOpened].imgUrl}
+       name={ratingData.data[isEventOpened].name}
+       wins={ratingData.data[isEventOpened].wins}
+       likes={ratingData.data[isEventOpened].likes}
+       dislikes={ratingData.data[isEventOpened].dislikes}
       />
      )}
      <div className="w-full flex">
@@ -163,10 +160,6 @@ const Theme = () => {
         </h1>
         {isRating && (
          <StarRating
-          category={category}
-          theme={theme}
-          yourRating={yourRating}
-          setYourRating={setYourRating}
           starClickHandler={starClickHandler}
           rating={
            themeData.data[0].stars.find(
