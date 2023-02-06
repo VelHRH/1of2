@@ -11,10 +11,16 @@ const getCategories = async () => {
  return res.json();
 };
 
+const sortByCat = async () => {
+  const res = await fetch(`${process.env.API_HOST}/sortedcategories`);
+  return res.json();
+ };
+
 export const getStaticProps = async () => {
  const queryClient = new QueryClient();
 
  await queryClient.prefetchQuery("categories", getCategories);
+ await queryClient.prefetchQuery("sorted", sortByCat);
 
  return {
   props: { dehydratedState: dehydrate(queryClient) },
@@ -25,6 +31,7 @@ export default function Home() {
  const [searchVal, setSearchVal] = useState("");
 
  const { data, isLoading } = useQuery("categories", getCategories);
+ const sortedCategories = useQuery("sorted", sortByCat)
 
  if (isLoading) return <div>Loading...</div>;
 
@@ -58,15 +65,13 @@ export default function Home() {
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
       Top categories:
      </h1>
-     {[...data]
-      .sort((a, b) => b.subcategories.length - a.subcategories.length)
-      .slice(0, 5)
+     {sortedCategories.data
       .map((category, index) => (
        <SideTop
         key={index}
         place={index + 1}
-        themes={category.subcategories.length}
-        name={category.name.toUpperCase()}
+        themes={category.themes}
+        name={category.category}
        />
       ))}
     </div>

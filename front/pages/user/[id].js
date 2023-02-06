@@ -102,7 +102,7 @@ const Me = ({ data }) => {
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen">
     <div className="flex flex-col items-start px-10 pt-10">
-     <img src={data.imgUrl} alt="Profile img" className="w-full aspect-square rounded-full object-cover mb-5"></img>
+     <img src={data.imgUrl} alt="Profile img" className="w-full aspect-square border-4 border-slate-900 dark:border-slate-50 rounded-full object-cover mb-5"></img>
      <h1 className="dark:text-slate-50 text-4xl self-center text-center mb-5">{data.login}</h1>
      {allowEdit && <button className="w-full mb-3 p-2 text-2xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 ease-in-out duration-500">Edit</button>}
      {allowEdit && <button className="w-full mb-3 p-2 text-2xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-orange-600 to-red-600 hover:scale-110 ease-in-out duration-500">Delete</button>}

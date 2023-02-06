@@ -42,9 +42,9 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
 
  const logout = () => {
   if (window.confirm("You sure you want to log out?")) {
-   setIsAuth();
    window.localStorage.removeItem("token");
    router.reload();
+   setIsAuth();
   }
  };
  return (

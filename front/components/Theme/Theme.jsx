@@ -2,7 +2,7 @@ export const Theme = (props) => {
  const { name, imgUrl, description, author, stars } = props;
  return (
   <div className="group cursor-pointer">
-   <div className="group-hover:scale-110 h-[250px] ease-in-out duration-500">
+   <div className="group-hover:scale-105 h-[250px] ease-in-out duration-500">
     <img
      src={imgUrl}
      alt="Theme"
