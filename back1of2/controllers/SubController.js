@@ -2,7 +2,6 @@ import ThemeModel from "../models/Theme.js"
 
 export const getOne = async (req, res) => {
   try {
-    const categoryName = req.params.name;
     const id = req.params.id
     ThemeModel.find(
       {name: id},
