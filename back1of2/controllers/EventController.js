@@ -86,7 +86,7 @@ export const results = async (req, res) => {
      }
     );
     
-    (user.winners.length==0 || Date().toString().slice(0,22) !== user.winners[0].date.toString().slice(0,22)) && user.winners.unshift({ ...sortedReq[i], date: new Date() });
+    (user.winners.length==0 || Date().toString().slice(0,22) !== user.winners[0].date.toString().slice(0,22)) && user.winners.unshift({ ...sortedReq[i], date: new Date(), pageId: results._id });
      
     await user.save();
    } else {

@@ -1,4 +1,5 @@
 import ThemeModel from "../models/Theme.js"
+import CategoryModel from "../models/Category.js"
 
 export const getOne = async (req, res) => {
   try {
@@ -16,6 +17,26 @@ export const getOne = async (req, res) => {
          res.json(subcategory);
       }
     )
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({message: "Unable to get category"});
+  }
+}
+
+export const sortByCat = async (req, res) => {
+  try {
+    const themes = await ThemeModel.find();
+    const categories = await CategoryModel.find();
+    let doc =[];
+    for (let i of categories){
+      let counter = 0;
+      for (let j of themes){
+        j.category === i.name && counter++
+      }
+      doc.push({category: i.name, themes: counter});
+    }
+    res.json(doc.sort((a, b) => b.themes-a.themes));
   }
   catch (err) {
     console.log(err);
