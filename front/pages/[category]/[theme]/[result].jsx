@@ -46,21 +46,19 @@ const Result = () => {
  );
 
  useEffect(() => {
-  if (data[0].results[data[0].results.length - 1].wins == 0) {
+  if (data[0].results[0].wins == 0) {
    setTipText(
-    `Wow! You've got an interesting taste, as this is the first win for "${
-     data[0].results[data[0].results.length - 1].name
-    }" here.`
+    `Wow! You've got an interesting taste, as this is the first win for "${data[0].results[0].name}" here.`
    );
   } else {
    setTipText(
-    `Did you know? It's just ${data[data.length - 1].wins + 1}${
-     data[0].results[data[0].results.length - 1].wins + 1 === 2
+    `Did you know? It's just ${data[0].results[0].wins + 1}${
+     data[0].results[0].wins + 1 === 2
       ? "nd"
-      : data[0].results[data[0].results.length - 1].wins + 1 === 3
+      : data[0].results[0].wins + 1 === 3
       ? "rd"
       : "th"
-    } win for "${data[0].results[data[0].results.length - 1].name}" here.`
+    } win for "${data[0].results[0].name}" here.`
    );
   }
  }, []);

@@ -10,6 +10,8 @@ import { FullEvenView } from "../../../components/FullEvenView";
 import { Game } from "../../../components/Game";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import { useRouter } from "next/router";
+import { CommentSection } from "../../../components/Comment/CommentSection";
+import { Comment } from "../../../components/Comment/Comment";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -220,6 +222,11 @@ const Theme = () => {
          Start
         </div>
        </div>
+       <CommentSection />
+       <Comment>
+        ghjklkjhsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+        sssssssssssssssssssssssssssssssssssssssssssssssssssssssghjkl
+       </Comment>
       </div>
       <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
        <h1 className="text-3xl mb-5 dark:text-slate-50">

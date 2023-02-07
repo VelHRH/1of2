@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Winner } from "../../components/Winner";
 import { RatingElement } from "../../components/RatingElement";
 import { FullEvenView } from "../../components/FullEvenView";
+import Link from "next/link"
 
 export const getServerSideProps = async (context) => {
  const { id } = context.params;
@@ -78,9 +79,11 @@ const Me = ({ data }) => {
    <div className="text-xl md:text-3xl border-b-2 border-slate-600 p-2 mb-4 dark:text-slate-50">
       {data.login}'s winners
      </div>
-   <div className="grid gap-4 grid-cols-5 md:grid-cols-8">
+   <div className="grid gap-4 grid-cols-5 md:grid-cols-10">
       {data.winners?.map((winner) => (
+        <Link href={`/${winner.category}/${winner.subcategory}/${winner.pageId}`}>
        <Winner image={winner.imgUrl} date={winner.date} />
+       </Link>
       ))}
      </div>
      <div className="text-xl md:text-3xl border-b-2 border-slate-600 p-2 my-4 mt-7 dark:text-slate-50">
