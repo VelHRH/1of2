@@ -14,6 +14,7 @@ const UsersSchema = new mongoose.Schema({
   login: {
     type: String,
     required: true,
+    unique: true
   },
   winners: {
     type: Array,
