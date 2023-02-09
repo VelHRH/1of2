@@ -27,6 +27,13 @@ const getRating = async (category, theme) => {
  return res.json();
 };
 
+const getComments = async (category, theme) => {
+ const res = await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/allcomments`
+ );
+ return res.json();
+};
+
 const giveStar = async (category, theme, r) => {
  await fetch(`${process.env.API_HOST}/categories/${category}/${theme}`, {
   method: "POST",
@@ -40,6 +47,54 @@ const giveStar = async (category, theme, r) => {
  });
 };
 
+const postComment = async (category, theme, text) => {
+ await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/comment`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `${window.localStorage.getItem("token")}`,
+   },
+   body: JSON.stringify({
+    text,
+   }),
+  }
+ );
+};
+
+const likeCommentReq = async (category, theme, id) => {
+ await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/likecomment`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `${window.localStorage.getItem("token")}`,
+   },
+   body: JSON.stringify({
+    id,
+   }),
+  }
+ );
+};
+
+const disCommentReq = async (category, theme, id) => {
+ await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/dislikecomment`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `${window.localStorage.getItem("token")}`,
+   },
+   body: JSON.stringify({
+    id,
+   }),
+  }
+ );
+};
+
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
  const queryClient = new QueryClient();
@@ -49,6 +104,9 @@ export const getServerSideProps = async (context) => {
  );
  await queryClient.prefetchQuery(["category", category, theme, "rating"], () =>
   getRating(category, theme)
+ );
+ await queryClient.prefetchQuery(["comments", category, theme], () =>
+  getComments(category, theme)
  );
 
  const data = await getTheme(category, theme);
@@ -73,14 +131,44 @@ const Theme = () => {
  const ratingData = useQuery(["category", category, theme, "rating"], () =>
   getRating(category, theme)
  );
+ const comments = useQuery(["comments", category, theme], () =>
+  getComments(category, theme)
+ );
 
  const starMutation = useMutation(async (req) => {
   await giveStar(req.category, req.theme, req.r);
   await themeData.refetch();
  });
 
+ const postCommentMutation = useMutation(async (req) => {
+  await postComment(req.category, req.theme, req.text);
+  await comments.refetch();
+ });
+
+ const likeMutation = useMutation(async (req) => {
+  await likeCommentReq(req.category, req.theme, req.id);
+  await comments.refetch();
+ });
+
+ const disMutation = useMutation(async (req) => {
+  await disCommentReq(req.category, req.theme, req.id);
+  await comments.refetch();
+ });
+
  const starClickHandler = async (r) => {
   starMutation.mutate({ category, theme, r });
+ };
+
+ const submitCommentHandler = async (text) => {
+  postCommentMutation.mutate({ category, theme, text });
+ };
+
+ const likeComment = async (id) => {
+  likeMutation.mutate({ category, theme, id });
+ };
+
+ const disComment = async (id) => {
+  disMutation.mutate({ category, theme, id });
  };
 
  const [clickedMode, setClickedMode] = useState("8");
@@ -178,7 +266,7 @@ const Theme = () => {
         alt="Subcategory"
         className="h-[350px] w-full object-cover"
        />
-       <div className="grid gap-4 grid-cols-4 mt-5 w-full">
+       <div className="grid gap-4 grid-cols-4 mt-5 w-full mb-10">
         <NumberBtn
          isClicked={clickedMode === "8"}
          handleModeChoice={handleModeChoice}
@@ -222,8 +310,26 @@ const Theme = () => {
          Start
         </div>
        </div>
-       <CommentSection />
-       <Comment>ghjklkjhssss</Comment>
+       {isRating && (
+        <CommentSection submitCommentHandler={submitCommentHandler} />
+       )}
+       {comments.data.map((comment) => (
+        <Comment
+         key={comment._id}
+         id={comment._id}
+         isLogged={isRating}
+         likes={comment.likes}
+         dislikes={comment.dislikes}
+         user={comment.user}
+         curUser={
+          isRating && jwt_decode(window.localStorage.getItem("token"))._id
+         }
+         likeComment={likeComment}
+         disComment={disComment}
+        >
+         {comment.text}
+        </Comment>
+       ))}
       </div>
       <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
        <h1 className="text-3xl mb-5 dark:text-slate-50">

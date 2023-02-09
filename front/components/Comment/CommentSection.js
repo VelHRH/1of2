@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const CommentSection = () => {
- const handleSubmit = (e) => {
-  e.preventDefault();
-  console.log("Success");
- };
+export const CommentSection = ({ submitCommentHandler }) => {
+ const [text, setText] = useState("");
  return (
-  <form onSubmit={handleSubmit} className="flex flex-col w-full mb-5">
+  <form
+   onSubmit={(e) => {
+    e.preventDefault();
+    submitCommentHandler(text);
+    setText("");
+   }}
+   className="flex flex-col w-full mb-5"
+  >
    <textarea
-    className="w-full p-2 rounded-md border-2 border-slate-500 h-20 bg-transparent text-slate-900 dark:text-slate-50 mt-10"
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+    className="w-full p-2 rounded-md border-2 border-slate-500 h-20 dark:bg-slate-900 bg-slate-300 text-slate-900 dark:text-slate-50 mt-2"
     placeholder="Your comment..."
    ></textarea>
    <button
