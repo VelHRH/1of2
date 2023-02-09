@@ -10,12 +10,12 @@ const CommentSchema = new mongoose.Schema({
     required: true,
   },
   likes: {
-    type: Number,
-    default: 0,
+    type: Array,
+    default: [],
   },
   dislikes: {
-    type: Number,
-    default: 0,
+    type: Array,
+    default: [],
   },
   theme: {
     type: String,

@@ -30,6 +30,8 @@ app.get('/sortedcategories', SubController.sortByCat);
 
 app.post('/categories/:name/:id/comment', checkAuth,  CommentController.add);
 app.get('/categories/:name/:theme/allcomments', CommentController.getComments);
+app.post('/categories/:name/:theme/likecomment', checkAuth, CommentController.likeComment);
+app.post('/categories/:name/:theme/dislikecomment', checkAuth, CommentController.dislikeComment);
 
 app.post('/register', registerValidation, UserController.register);
 app.post('/login', UserController.login);
