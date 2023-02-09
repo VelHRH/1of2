@@ -223,10 +223,7 @@ const Theme = () => {
         </div>
        </div>
        <CommentSection />
-       <Comment>
-        ghjklkjhsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-        sssssssssssssssssssssssssssssssssssssssssssssssssssssssghjkl
-       </Comment>
+       <Comment>ghjklkjhssss</Comment>
       </div>
       <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
        <h1 className="text-3xl mb-5 dark:text-slate-50">

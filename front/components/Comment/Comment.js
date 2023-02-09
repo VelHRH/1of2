@@ -15,7 +15,7 @@ export const Comment = ({ children }) => {
     </div>
    </div>
    <div className="dark:bg-slate-900 flex-1 bg-slate-300 p-5 rounded-xl text-xl">
-    <Link href="#" className="dark:text-slate-200">
+    <Link href="#" className="text-sky-500">
      FGhjkl;kjhij
     </Link>
     <div className="text-slate-400 mt-3">{children}</div>
