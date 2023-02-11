@@ -5,6 +5,7 @@ import * as SubController from "./controllers/SubController.js"
 import * as EventController from "./controllers/EventController.js"
 import * as UserController from "./controllers/UserController.js"
 import * as CommentController from "./controllers/CommentController.js"
+import * as GameController from "./controllers/GameController.js"
 import cors from "cors"
 import { registerValidation } from './validations.js'
 import checkAuth from './utils/checkAuth.js'
@@ -23,7 +24,7 @@ app.get('/categories', CategoryController.getAll);
 app.get('/categories/:name', CategoryController.getOne);
 app.get('/categories/:name/:id', SubController.getOne);
 app.get('/categories/:name/:id/rating', EventController.getRating);
-app.post('/categories/:name/:id/results', EventController.results);
+app.post('/categories/:name/:id/results', GameController.results);
 app.get('/categories/:name/:id/:result/oneresult', EventController.getResult);
 app.post('/categories/:name/:id', checkAuth, SubController.giveStars);
 app.get('/sortedcategories', SubController.sortByCat);
