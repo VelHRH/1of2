@@ -30,6 +30,7 @@ app.get('/sortedcategories', SubController.sortByCat);
 
 app.post('/categories/:name/:id/results', GameController.results);
 app.get('/categories/:name/:id/:game/currentGame', GameController.getCurrent);
+app.post('/categories/:name/:id/:game/next', GameController.setNext);
 
 app.post('/categories/:name/:id/comment', checkAuth,  CommentController.add);
 app.get('/categories/:name/:theme/allcomments', CommentController.getComments);

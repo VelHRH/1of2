@@ -34,7 +34,7 @@ export const results = async (req, res) => {
    }
    const doc = new ResultModel({
      results: events,
-     current: events.slice(0,2),
+     current: [...events.slice(0,2), {round: 1, total: events.length}],
      history: [],
      user: user
    })
@@ -48,6 +48,42 @@ export const results = async (req, res) => {
   }
  };
 
+ export const setNext = async (req, res) => {
+  try {
+   const game = await req.params.game;
+   const session = await ResultModel.findOne({ _id: game });
+   if (session.results.length === session.current[2].total*2-2){
+    session.results.push(req.body.choice);
+    await ResultModel.findOneAndUpdate({ _id: game }, session)
+    return res.json({success: true})
+   }else{
+   for (let i = session.results.length-1; i>=0; i--){
+    if (session.results[i].name === session.current[0].name) {
+      if (session.current[0].name === req.body.choice.name){
+        session.results[i].likes++
+        session.results[i+1].dislikes++
+      }else{
+        session.results[i].dislikes++
+        session.results[i+1].likes++
+      }
+      session.current[0] = session.results[i+2];
+      session.current[1] = session.results[i+3] || req.body.choice;
+      session.current[2] = {round: session.current[2].round+1, total: session.current[2].total}
+      break;
+    }
+  }
+  session.results.push(req.body.choice);
+  await ResultModel.findOneAndUpdate({ _id: game }, session)
+  res.json(session)
+}
+  } catch (err) {
+   console.log(err);
+   return res.status(500).json({
+    message: "Error with game session, sorry",
+   });
+  }
+ };
+
  export const getCurrent = async (req, res) => {
   try {
    const game = await req.params.game;
@@ -57,7 +93,7 @@ export const results = async (req, res) => {
      .status(404)
      .json({ message: "No active game session with such id" });
    } 
-  res.json(session[0].current)
+  res.json(session[0])
   } catch (err) {
    console.log(err);
    return res.status(500).json({
