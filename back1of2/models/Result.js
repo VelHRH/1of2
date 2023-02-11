@@ -9,6 +9,10 @@ const ResultSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  current: {
+    type: Array,
+    required: true,
+  },
   user:{
     type: String
   }
