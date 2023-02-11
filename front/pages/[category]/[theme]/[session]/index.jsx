@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 
 const getCurr = async (category, theme, session) => {
  const res = await fetch(
@@ -10,31 +10,65 @@ const getCurr = async (category, theme, session) => {
  return res.json();
 };
 
+const nextEvents = async (category, theme, session, choice) => {
+ const res = await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/next`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+   },
+   body: JSON.stringify({
+    choice,
+   }),
+  }
+ );
+ return res.json();
+};
+
 const Game = () => {
  const router = useRouter();
  const { category, theme, session } = router.query;
-
- function powerOfTwo(x) {
-  return (Math.log(x) / Math.log(2)) % 1 === 0;
- }
 
  const curr = useQuery(["game", category, theme, session], () =>
   getCurr(category, theme, session)
  );
 
+ const nextMutation = useMutation({
+  mutationFn: ({ category, theme, session, choice }) =>
+   nextEvents(category, theme, session, choice),
+  onSuccess: (data) => {
+   console.log(data);
+   if (data.success === true) {
+    router.push(`/${category}/${theme}/${session}/result`);
+   } else {
+    curr.refetch();
+   }
+  },
+ });
+
+ const nextClickHandler = async (choice) => {
+  nextMutation.mutate({ category, theme, session, choice });
+ };
+
+ function powerOfTwo(x) {
+  return (Math.log(x) / Math.log(2)) % 1 === 0;
+ }
+
  if (curr.isLoading) return <div>Loading...</div>;
- if (curr.data.current === undefined)
-  return <div>This game session is not valid already...</div>;
+
+ if (curr.data.results.length === curr.data.current[2].total * 2 - 1)
+  return router.push(`/${category}/${theme}/${session}/result`);
 
  return (
   <div className="overflow-hidden h-screen dark:bg-slate-800 dark:text-slate-50">
-   {curr.data.current === undefined ? (
-    <div>This game session is not valid already...</div>
+   {curr.data.results.length === curr.data.current[2].total * 2 - 1 ? (
+    router.push(`/${category}/${theme}/${session}/result`)
    ) : (
     <>
      <div className="mt-5 text-3xl text-center">{theme}</div>
      <div className="mt-1 mb-3 text-3xl text-center">
-      Round: {curr.data.current[2].round}/{curr.data.current[2].total}
+      Round: {curr.data.current[2].round}/{curr.data.current[2].total - 1}
      </div>
      <div className="w-full flex h-screen">
       <div className="w-full md:w-1/2 h-[300px] md:h-[600px]">
@@ -48,7 +82,7 @@ const Game = () => {
        />
        <Image
         loader={() => curr.data.current[0].imgUrl}
-        onClick={() => handleChoice(curRound * 2 - 2)}
+        onClick={() => nextClickHandler(curr.data.current[0])}
         src={curr.data.current[0].imgUrl}
         alt="Choice1"
         placeholder="blur"
@@ -69,7 +103,7 @@ const Game = () => {
        />
        <Image
         loader={() => curr.data.current[1].imgUrl}
-        onClick={() => handleChoice(curRound * 2 - 1)}
+        onClick={() => nextClickHandler(curr.data.current[1])}
         src={curr.data.current[1].imgUrl}
         placeholder="blur"
         blurDataURL={curr.data.current[1].imgUrl}

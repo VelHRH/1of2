@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import jwt_decode from "jwt-decode";
 import Image from "next/image";
+import { useQuery } from "react-query";
 
 const postResults = async (results, user, category, theme) => {
  const res = await fetch(
@@ -20,48 +21,28 @@ const postResults = async (results, user, category, theme) => {
  return res.json();
 };
 
+const getEvents = async (category, theme, clickedMode) => {
+  const res = await fetch(`${process.env.API_HOST}/categories/${category}/${theme}/rating`);
+  const data = await res.json();
+  return shuffle(data.filter((event) => event.subcategory === theme))
+  .slice(0, parseInt(clickedMode))
+  .map((event) => ({ ...event, curLikes: 0 }))
+}
+
 export const Game = ({ clickedMode, setIsGame }) => {
  const router = useRouter();
  const { category, theme } = router.query;
  const [isLoading, setIsLoading] = useState(true);
- const [events, setEvents] = useState();
  const [curRound, setCurRound] = useState(1);
  const [stage, setStage] = useState(1);
-
- function shuffle(array) {
-  let currentIndex = array.length,
-   randomIndex;
-
-  while (currentIndex != 0) {
-   randomIndex = Math.floor(Math.random() * currentIndex);
-   currentIndex--;
-
-   [array[currentIndex], array[randomIndex]] = [
-    array[randomIndex],
-    array[currentIndex],
-   ];
-  }
-  return array;
- }
 
  function powerOfTwo(x) {
   return (Math.log(x) / Math.log(2)) % 1 === 0;
  }
 
- useEffect(() => {
-  document.title = "Game";
-  setIsLoading(true);
-  fetch(`${process.env.API_HOST}/categories/${category}/${theme}/rating`)
-   .then((res) => res.json())
-   .then((data) => {
-    setEvents(
-     shuffle(data.filter((event) => event.subcategory === theme))
-      .slice(0, parseInt(clickedMode))
-      .map((event) => ({ ...event, curLikes: 0 }))
-    );
-   })
-   .finally(() => setIsLoading(false));
- }, []);
+ const events = useQuery(["events", category, theme, Date()], () =>
+  getEvents(category, theme, clickedMode)
+ );
 
  useEffect(() => {
   if (curRound !== 1 && curRound !== parseInt(clickedMode) - 1) {
