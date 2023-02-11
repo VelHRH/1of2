@@ -9,7 +9,7 @@ import { FunTip } from "../../../components/FunTip";
 
 const getResults = async (category, theme, result) => {
  const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${result}`
+  `${process.env.API_HOST}/categories/${category}/${theme}/${result}/oneresult`
  );
  return res.json();
 };

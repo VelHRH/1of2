@@ -3,6 +3,7 @@ import { NumberBtn } from "../../../components/NumberBtn";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
+import Image from "next/image";
 import jwt_decode from "jwt-decode";
 import ChartRatings from "../../../components/ChartRatings";
 import { StarRating } from "../../../components/Theme/StarRating";
@@ -16,6 +17,23 @@ import { Comment } from "../../../components/Comment/Comment";
 const getTheme = async (category, theme) => {
  const res = await fetch(
   `${process.env.API_HOST}/categories/${category}/${theme}`
+ );
+ return res.json();
+};
+
+const postGame = async (category, theme, user, clickedMode) => {
+ const res = await fetch(
+  `${process.env.API_HOST}/categories/${category}/${theme}/results`,
+  {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json;charset=utf-8",
+   },
+   body: JSON.stringify({
+    clickedMode,
+    user,
+   }),
+  }
  );
  return res.json();
 };
@@ -135,6 +153,15 @@ const Theme = () => {
   getComments(category, theme)
  );
 
+ const startGame = useMutation({
+  mutationFn: ({ category, theme, user, clickedMode }) =>
+   postGame(category, theme, user, clickedMode),
+  onSuccess: (data) => {
+   console.log(data);
+   router.push(`/${category}/${theme}/${data._id}`);
+  },
+ });
+
  const starMutation = useMutation(async (req) => {
   await giveStar(req.category, req.theme, req.r);
   await themeData.refetch();
@@ -154,6 +181,10 @@ const Theme = () => {
   await disCommentReq(req.category, req.theme, req.id);
   await comments.refetch();
  });
+
+ const startClickHandler = async (user) => {
+  const current = startGame.mutate({ category, theme, user, clickedMode });
+ };
 
  const starClickHandler = async (r) => {
   starMutation.mutate({ category, theme, r });
@@ -261,9 +292,12 @@ const Theme = () => {
          />
         )}
        </div>
-       <img
+       <Image
+        loader={() => themeData.data[0].imgUrl}
         src={themeData.data[0].imgUrl}
         alt="Subcategory"
+        width={200}
+        height={500}
         className="h-[350px] w-full object-cover"
        />
        <div className="grid gap-4 grid-cols-4 mt-5 w-full mb-10">
@@ -304,7 +338,13 @@ const Theme = () => {
         </div>
 
         <div
-         onClick={() => setIsGame("true")}
+         onClick={() =>
+          startClickHandler(
+           window.localStorage.getItem("token")
+            ? jwt_decode(window.localStorage.getItem("token"))._id
+            : null
+          )
+         }
          className="text-xl md:text-2xl col-span-2 flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-lime-500 to-green-600 cursor-pointer rounded-2xl hover:scale-105 ease-in-out duration-500"
         >
          Start

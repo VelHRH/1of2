@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import jwt_decode from "jwt-decode";
+import Image from "next/image";
 
 const postResults = async (results, user, category, theme) => {
  const res = await fetch(
@@ -75,7 +76,6 @@ export const Game = ({ clickedMode, setIsGame }) => {
 
  const handleChoice = (index) => {
   events[index].curLikes++;
-
   if (curRound === parseInt(clickedMode - 1)) {
    setIsGame("loading");
    postResults(
@@ -123,29 +123,45 @@ export const Game = ({ clickedMode, setIsGame }) => {
      </div>
      <div className="w-full flex h-screen">
       <div className="w-full md:w-1/2 h-[300px] md:h-[600px]">
-       <img
+       <Image
+        loader={() => events[curRound * 2 - 2].imgUrl}
         src={events[curRound * 2 - 2].imgUrl}
         alt="Choice1"
+        width={200}
+        height={500}
         className="w-full h-full object-cover blur-md"
        />
-       <img
+       <Image
+        loader={() => events[curRound * 2 - 2].imgUrl}
         onClick={() => handleChoice(curRound * 2 - 2)}
         src={events[curRound * 2 - 2].imgUrl}
         alt="Choice1"
-        className="absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover top-[160px] md:top-[220px] md:left-[calc(80px+(100%-80px)/4)] left-1/2 translate-x-[-50%] shadow-2xl hover:-rotate-3 ease-in-out duration-300"
+        placeholder="blur"
+        blurDataURL={events[curRound * 2 - 2].imgUrl}
+        width={200}
+        height={500}
+        className={`absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover top-[160px] md:top-[220px] md:left-[calc(80px+(100%-80px)/4)] left-1/2 translate-x-[-50%] shadow-2xl hover:-rotate-3 ease-in-out duration-300`}
        />
       </div>
       <div className="w-full md:w-1/2 h-[300px] md:h-[600px]">
-       <img
+       <Image
+        loader={() => events[curRound * 2 - 1].imgUrl}
         src={events[curRound * 2 - 1].imgUrl}
         alt="Choice1"
+        width={200}
+        height={500}
         className="w-full h-full object-cover blur-md"
        />
-       <img
+       <Image
+        loader={() => events[curRound * 2 - 1].imgUrl}
         onClick={() => handleChoice(curRound * 2 - 1)}
         src={events[curRound * 2 - 1].imgUrl}
+        placeholder="blur"
+        blurDataURL={events[curRound * 2 - 1].imgUrl}
         alt="Choice1"
-        className="absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover right-1/2 md:right-[calc((100%-80px)/4)] top-[470px] md:top-[220px] translate-x-[50%] shadow-2xl hover:rotate-3 ease-in-out duration-300"
+        width={200}
+        height={500}
+        className={`absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover right-1/2 md:right-[calc((100%-80px)/4)] top-[470px] md:top-[220px] translate-x-[50%] shadow-2xl hover:rotate-3 ease-in-out duration-300`}
        />
       </div>
      </div>
