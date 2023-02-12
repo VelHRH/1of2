@@ -30,7 +30,7 @@ export const results = async (req, res) => {
      .json({ message: "No events yet for such subcategory" });
    } else {
     events = await shuffle(events).slice(0, parseInt(req.body.clickedMode))
-    .map((event) => ({ ...event, curLikes: 0 }))
+    .map((event) => ({ ...event._doc, curLikes: 0, curDislikes: 0 }));
    }
    const doc = new ResultModel({
      results: events,
@@ -52,7 +52,12 @@ export const results = async (req, res) => {
   try {
    const game = await req.params.game;
    const session = await ResultModel.findOne({ _id: game });
+   session.history.push(session.current[0], session.current[1]);
    if (session.results.length === session.current[2].total*2-2){
+    req.body.choice.curLikes++;
+    if (session.results[session.results.length-1].name !== req.body.choice.name) 
+      {session.results[session.results.length-1].curDislikes++}
+    else {session.results[session.results.length-2].curDislikes++}
     session.results.push(req.body.choice);
     await ResultModel.findOneAndUpdate({ _id: game }, session)
     return res.json({success: true})
@@ -60,12 +65,11 @@ export const results = async (req, res) => {
    for (let i = session.results.length-1; i>=0; i--){
     if (session.results[i].name === session.current[0].name) {
       if (session.current[0].name === req.body.choice.name){
-        session.results[i].likes++
-        session.results[i+1].dislikes++
+        session.results[i+1].curDislikes++
       }else{
-        session.results[i].dislikes++
-        session.results[i+1].likes++
+        session.results[i].curDislikes++
       }
+      req.body.choice.curLikes++;
       session.current[0] = session.results[i+2];
       session.current[1] = session.results[i+3] || req.body.choice;
       session.current[2] = {round: session.current[2].round+1, total: session.current[2].total}

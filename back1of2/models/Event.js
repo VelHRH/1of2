@@ -17,9 +17,15 @@ const EventSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  curLikes: {
+    type: Number,
+  },
   dislikes: {
     type: Number,
     required: true,
+  },
+  curDislikes: {
+    type: Number,
   },
   wins: {
     type: Number,
