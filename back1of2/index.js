@@ -24,13 +24,14 @@ app.get('/categories', CategoryController.getAll);
 app.get('/categories/:name', CategoryController.getOne);
 app.get('/categories/:name/:id', SubController.getOne);
 app.get('/categories/:name/:id/rating', EventController.getRating);
-app.get('/categories/:name/:id/:result/oneresult', EventController.getResult);
 app.post('/categories/:name/:id', checkAuth, SubController.giveStars);
 app.get('/sortedcategories', SubController.sortByCat);
 
 app.post('/categories/:name/:id/results', GameController.results);
 app.get('/categories/:name/:id/:game/currentGame', GameController.getCurrent);
 app.post('/categories/:name/:id/:game/next', GameController.setNext);
+app.get('/categories/:name/:id/:game/oneresult', GameController.openResult);
+app.put('/categories/:name/:id/:game/updateResult', GameController.handleResult);
 
 app.post('/categories/:name/:id/comment', checkAuth,  CommentController.add);
 app.get('/categories/:name/:theme/allcomments', CommentController.getComments);

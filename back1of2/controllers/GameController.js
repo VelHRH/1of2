@@ -18,7 +18,6 @@ function shuffle(array) {
   return array;
  }
 
-
 export const results = async (req, res) => {
   try {
    const user = await UsersModel.findById(req.body.user);
@@ -103,5 +102,64 @@ export const results = async (req, res) => {
    return res.status(500).json({
     message: "Error with game session, sorry",
    });
+  }
+ };
+
+ export const openResult = async (req, res) => {
+  try {
+   const session = req.params.game;
+   const result = await ResultModel.findOne({ _id: session });
+   if (!result) {
+    return res
+     .status(404)
+     .json({ message: "No game held with such id!" });
+   } 
+   const top = [];
+   for (let i=result.results.length-1; i>=0; i--){
+    if (top.find(t => t.name === result.results[i].name) === undefined){
+      top.push(result.results[i]);
+    }
+   }
+   res.json({top, history: result.history});
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to post the results" });
+  }
+ };
+
+ export const handleResult = async (req, res) => {
+  try {
+   const session = req.params.game;
+   const result = await ResultModel.findOne({ _id: session });
+   if (!result) {
+    return res
+     .status(404)
+     .json({ message: "No game held with such id!" });
+   } 
+   const top = [];
+   for (let i=result.results.length-1; i>=0; i--){
+    if (top.indexOf(result.results[i]) === -1){
+      top.push(result.results[i]);
+      const wins = result.results[i].currDislikes === 0 ? 1 : 0
+      EventModel.findOneAndUpdate(
+        {_id: result.results[i]._id}, 
+        {
+          likes: result.results[i].likes + result.results[i].curLikes,
+          dislikes: result.results[i].dislikes + result.results[i].curDislikes,
+          wins:  result.results[i].wins + wins
+        }
+      ).then((err, doc) => {
+        if (err || !doc) {
+          console.log(err);
+          res.status(500).json({ message: "Unable to post the results" });
+        }
+      })
+    }
+   }
+   console.log(top);
+   res.json(top);
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to post the results" });
   }
  };

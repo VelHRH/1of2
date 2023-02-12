@@ -23,27 +23,6 @@ export const getRating = async (req, res) => {
  }
 };
 
-export const getResult = async (req, res) => {
-  try {
-   const result = req.params.result;
-   ResultModel.find({ _id: result }, (err, result) => {
-    if (err) {
-     console.log(err);
-     return res.status(500).json({ message: "Unable to get the results" });
-    }
-    if (!result) {
-     return res
-      .status(404)
-      .json({ message: "No results for such url" });
-    }
-    res.json(result);
-   });
-  } catch (err) {
-   console.log(err);
-   res.status(500).json({ message: "Unable to get the results" });
-  }
- };
-
 export const results = async (req, res) => {
  try {
   const user = await UsersModel.findById(req.body.user);
