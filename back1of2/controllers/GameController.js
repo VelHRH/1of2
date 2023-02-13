@@ -77,7 +77,7 @@ export const results = async (req, res) => {
   }
   session.results.push(req.body.choice);
   await ResultModel.findOneAndUpdate({ _id: game }, session)
-  res.json(session)
+  return res.json(session)
 }
   } catch (err) {
    console.log(err);
@@ -96,7 +96,7 @@ export const results = async (req, res) => {
      .status(404)
      .json({ message: "No active game session with such id" });
    } 
-  res.json(session[0])
+  return res.json(session[0])
   } catch (err) {
    console.log(err);
    return res.status(500).json({
@@ -120,46 +120,41 @@ export const results = async (req, res) => {
       top.push(result.results[i]);
     }
    }
-   res.json({top, history: result.history});
+   return res.json({top, history: result.history});
   } catch (err) {
    console.log(err);
-   res.status(500).json({ message: "Unable to post the results" });
+   return res.status(500).json({ message: "Unable to post the results" });
   }
  };
 
  export const handleResult = async (req, res) => {
   try {
-   const session = req.params.game;
-   const result = await ResultModel.findOne({ _id: session });
-   if (!result) {
-    return res
-     .status(404)
-     .json({ message: "No game held with such id!" });
-   } 
-   const top = [];
-   for (let i=result.results.length-1; i>=0; i--){
-    if (top.indexOf(result.results[i]) === -1){
+    const session = req.params.game;
+    const result = await ResultModel.findOne({ _id: session });
+    if (!result) {
+     return res
+      .status(404)
+      .json({ message: "No game held with such id!" });
+    } 
+    const top = [];
+    for (let i=result.results.length-1; i>=0; i--){
+     if (top.find(t => t.name === result.results[i].name) === undefined){
       top.push(result.results[i]);
-      const wins = result.results[i].currDislikes === 0 ? 1 : 0
-      EventModel.findOneAndUpdate(
+      const wins = result.results[i].curDislikes === 0 ? 1 : 0
+      await EventModel.findOneAndUpdate(
         {_id: result.results[i]._id}, 
-        {
-          likes: result.results[i].likes + result.results[i].curLikes,
-          dislikes: result.results[i].dislikes + result.results[i].curDislikes,
-          wins:  result.results[i].wins + wins
+        {$inc: {
+          likes: result.results[i].curLikes,
+          dislikes: result.results[i].curDislikes,
+          wins: wins
         }
-      ).then((err, doc) => {
-        if (err || !doc) {
-          console.log(err);
-          res.status(500).json({ message: "Unable to post the results" });
-        }
-      })
+      }
+      );
     }
    }
-   console.log(top);
-   res.json(top);
+   return res.json({success: true});
   } catch (err) {
    console.log(err);
-   res.status(500).json({ message: "Unable to post the results" });
+   return res.status(500).json({ message: "Unable to post the results" });
   }
  };
