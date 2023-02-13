@@ -1,28 +1,28 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery, QueryClient, dehydrate } from "react-query";
-import { BackBtn } from "../../../components/BackBtn";
+import { BackBtn } from "../../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
-import { ResultElement } from "../../../components/ResultElement";
-import { FunTip } from "../../../components/FunTip";
+import { ResultElement } from "../../../../components/ResultElement";
+import { FunTip } from "../../../../components/FunTip";
 
-const getResults = async (category, theme, result) => {
+const getResults = async (category, theme, session) => {
  const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${result}/oneresult`
+  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/oneresult`
  );
  return res.json();
 };
 
 export const getServerSideProps = async (context) => {
- const { category, theme, result } = await context.params;
+ const { category, theme, session } = await context.params;
  const queryClient = new QueryClient();
 
- await queryClient.prefetchQuery(["result", category, theme, result], () =>
-  getResults(category, theme, result)
+ await queryClient.prefetchQuery(["result", category, theme, session], () =>
+  getResults(category, theme, session)
  );
 
- const data = await getResults(category, theme, result);
+ const data = await getResults(category, theme, session);
 
  if (data.message) {
   return {
@@ -39,63 +39,54 @@ const Result = () => {
  const [displayMode, setDisplayMode] = useState("rating");
 
  const router = useRouter();
- const { category, theme, result } = router.query;
+ const { category, theme, session } = router.query;
 
- const { data, isLoading } = useQuery(["result", category, theme, result], () =>
-  getResults(category, theme, result)
+ const { data, isLoading } = useQuery(
+  ["result", category, theme, session],
+  () => getResults(category, theme, session)
  );
 
  useEffect(() => {
-  if (data[0].results[0].wins == 0) {
+  if (data.top[data.top.length - 1].wins === 0) {
    setTipText(
-    `Wow! You've got an interesting taste, as this is the first win for "${data[0].results[0].name}" here.`
+    `Wow! You've got an interesting taste, as this is the first win for "${
+     data.top[data.top.length - 1].name
+    }" here.`
    );
   } else {
    setTipText(
-    `Did you know? It's just ${data[0].results[0].wins + 1}${
-     data[0].results[0].wins + 1 === 2
+    `Did you know? It's just ${data.top[data.top.length - 1].wins + 1}${
+     data.top[data.top.length - 1].wins + 1 === 2
       ? "nd"
-      : data[0].results[0].wins + 1 === 3
+      : data.top[data.top.length - 1].wins + 1 === 3
       ? "rd"
       : "th"
-    } win for "${data[0].results[0].name}" here.`
+    } win for "${data.top[data.top.length - 1].name}" here.`
    );
   }
  }, []);
 
- const filterRes = (res) => {
-  let sortedArray = [];
-  for (let i = res.length - 1; i >= 0; i--) {
-   let isMatch = false;
-   for (let j = 0; j < sortedArray.length; j++) {
-    if (res[i]._id === sortedArray[j]._id) {
-     isMatch = true;
-     break;
-    }
-   }
-   if (!isMatch) sortedArray.push(res[i]);
-  }
-  return sortedArray;
- };
-
  const isGrey = (index) => {
-  const eventName = data[0].history[index].name;
+  const eventName = data.history[index].name;
   console.log(index);
   const neighbourName =
    index % 2 === 0
-    ? data[0].history[index + 1].name
-    : data[0].history[index - 1].name;
+    ? data.history[index + 1].name
+    : data.history[index - 1].name;
   let countEvent = 0,
    countNeighbour = 0;
-  for (const event of data[0].history) {
+  for (const event of data.history) {
    if (eventName === event.name) countEvent++;
    if (neighbourName === event.name) countNeighbour++;
   }
-  return countEvent > countNeighbour;
+  return (
+   countEvent > countNeighbour || data.top[0].name === data.history[index].name
+  );
  };
 
- if (isLoading) return <div>Loading..</div>;
-
+ if (isLoading) return <div>Loading...</div>;
+ if (data.results.length !== data.current[2].total * 2 - 1)
+  return <div>Game not finished.</div>;
  return (
   <>
    <Head>
@@ -112,7 +103,7 @@ const Result = () => {
       Your results for {theme}
      </h1>
      {displayMode === "rating" &&
-      filterRes(data[0].results)
+      data.top
        .reverse()
        .map((result, index) => (
         <ResultElement
@@ -123,11 +114,12 @@ const Result = () => {
        ))}
      {displayMode === "history" && (
       <div className="flex">
+       {console.log(data.history)}
        <div className="w-1/2">
-        {data[0].history.map(
+        {data.history.map(
          (result, index) =>
           index % 2 === 0 &&
-          index !== data[0].history.length - 1 && (
+          index !== data.history.length - 1 && (
            <img
             src={result.imgUrl}
             alt="Team1"
@@ -139,10 +131,9 @@ const Result = () => {
         )}
        </div>
        <div className="w-1/2">
-        {data[0].history.map(
+        {data.history.map(
          (result, index) =>
-          index % 2 === 1 &&
-          index !== data[0].history.length - 1 && (
+          index % 2 === 1 && (
            <img
             src={result.imgUrl}
             alt="Team2"

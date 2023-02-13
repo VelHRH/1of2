@@ -8,7 +8,6 @@ import jwt_decode from "jwt-decode";
 import ChartRatings from "../../../components/ChartRatings";
 import { StarRating } from "../../../components/Theme/StarRating";
 import { FullEvenView } from "../../../components/FullEvenView";
-import { Game } from "../../../components/Game";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import { useRouter } from "next/router";
 import { CommentSection } from "../../../components/Comment/CommentSection";
