@@ -20,6 +20,33 @@ const getTheme = async (category, theme) => {
  return res.json();
 };
 
+const editComment = async (category, theme, id, text) => {
+ await fetch(`${process.env.API_HOST}/categories/${category}/${theme}/edit`, {
+  method: "PUT",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+   id,
+   text,
+  }),
+ });
+};
+
+const deleteComment = async (category, theme, id) => {
+ await fetch(`${process.env.API_HOST}/categories/${category}/${theme}/delete`, {
+  method: "DELETE",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+   id,
+  }),
+ });
+};
+
 const postGame = async (category, theme, user, clickedMode) => {
  const res = await fetch(
   `${process.env.API_HOST}/categories/${category}/${theme}/results`,
@@ -181,6 +208,16 @@ const Theme = () => {
   await comments.refetch();
  });
 
+ const editMutation = useMutation(async (req) => {
+  await editComment(req.category, req.theme, req.id, req.text);
+  await comments.refetch();
+ });
+
+ const deleteMutation = useMutation(async (req) => {
+  await deleteComment(req.category, req.theme, req.id);
+  await comments.refetch();
+ });
+
  const startClickHandler = async (user) => {
   const current = startGame.mutate({ category, theme, user, clickedMode });
  };
@@ -199,6 +236,13 @@ const Theme = () => {
 
  const disComment = async (id) => {
   disMutation.mutate({ category, theme, id });
+ };
+ const edComment = async (id, text) => {
+  editMutation.mutate({ category, theme, id, text });
+ };
+
+ const delComment = async (id) => {
+  deleteMutation.mutate({ category, theme, id });
  };
 
  const [clickedMode, setClickedMode] = useState("8");
@@ -365,6 +409,8 @@ const Theme = () => {
          }
          likeComment={likeComment}
          disComment={disComment}
+         edComment={edComment}
+         delComment={delComment}
         >
          {comment.text}
         </Comment>

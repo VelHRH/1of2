@@ -4,6 +4,7 @@ import { useQuery, QueryClient, dehydrate } from "react-query";
 import { BackBtn } from "../../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
+
 import { ResultElement } from "../../../../components/ResultElement";
 import { FunTip } from "../../../../components/FunTip";
 
@@ -47,6 +48,7 @@ const Result = () => {
  );
 
  useEffect(() => {
+  console.log(data.top);
   if (data.top[data.top.length - 1].wins === 0) {
    setTipText(
     `Wow! You've got an interesting taste, as this is the first win for "${

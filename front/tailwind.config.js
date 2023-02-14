@@ -4,6 +4,9 @@ module.exports = {
  darkMode: 'class',
  theme: {
   extend: {},
+  fontFamily: {
+    'typewriter': ['Lekton', 'sans-serif'],
+  }
  },
  plugins: [require("tailwind-gradient-mask-image")],
 };
