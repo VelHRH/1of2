@@ -46,6 +46,21 @@ export const getComments = async (req, res) => {
   }
 }
 
+export const edit = async (req, res) => {
+  try {
+    const comment = await CommentModel.findOneAndUpdate(
+      {_id: req.body.id},
+      {text: req.body.text},
+      { returnOriginal: false },
+    );
+    res.json(comment)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({message: "Unable to get comments"});
+  }
+}
+
 export const likeComment = async (req, res) => {
   try {
     const userID = await req.userId;

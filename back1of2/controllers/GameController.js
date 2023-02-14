@@ -1,6 +1,7 @@
 import ResultModel from "../models/Result.js";
 import EventModel from "../models/Event.js";
 import UsersModel from "../models/Users.js";
+import mongoose from "mongoose";
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -58,6 +59,8 @@ export const results = async (req, res) => {
       {session.results[session.results.length-1].curDislikes++}
     else {session.results[session.results.length-2].curDislikes++}
     session.results.push(req.body.choice);
+    session.current[0] = {finished: true}
+    session.current[1] = {finished: true}
     await ResultModel.findOneAndUpdate({ _id: game }, session)
     return res.json({success: true})
    }else{
@@ -107,7 +110,7 @@ export const results = async (req, res) => {
 
  export const openResult = async (req, res) => {
   try {
-   const session = req.params.game;
+   const session = await req.params.game;
    const result = await ResultModel.findOne({ _id: session });
    if (!result) {
     return res
@@ -120,7 +123,7 @@ export const results = async (req, res) => {
       top.push(result.results[i]);
     }
    }
-   return res.json({top, history: result.history});
+   return res.json({top, history: result.history, results: result.results, current: result.current});
   } catch (err) {
    console.log(err);
    return res.status(500).json({ message: "Unable to post the results" });
@@ -129,7 +132,8 @@ export const results = async (req, res) => {
 
  export const handleResult = async (req, res) => {
   try {
-    const session = req.params.game;
+    if (req.body.user !== null) {
+    const session = await req.params.game;
     const result = await ResultModel.findOne({ _id: session });
     if (!result) {
      return res
@@ -152,6 +156,11 @@ export const results = async (req, res) => {
       );
     }
    }
+   await UsersModel.findOneAndUpdate(
+    {_id: req.body.user}, 
+    {$push: {winners: {...result.results[0], sessionId: session}}}, 
+  );
+  }
    return res.json({success: true});
   } catch (err) {
    console.log(err);
