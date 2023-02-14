@@ -35,7 +35,8 @@ app.put('/categories/:name/:id/:game/updateResult', GameController.handleResult)
 
 app.post('/categories/:name/:id/comment', checkAuth,  CommentController.add);
 app.get('/categories/:name/:theme/allcomments', CommentController.getComments);
-app.put('/categories/:name/:theme/edit', CommentController.edit);
+app.put('/categories/:name/:theme/edit', checkAuth, CommentController.edit);
+app.delete('/categories/:name/:theme/delete', checkAuth, CommentController.deleteComm);
 app.post('/categories/:name/:theme/likecomment', checkAuth, CommentController.likeComment);
 app.post('/categories/:name/:theme/dislikecomment', checkAuth, CommentController.dislikeComment);
 

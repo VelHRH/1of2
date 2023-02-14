@@ -7,13 +7,14 @@ export const add = async (req, res) => {
     const user = await UserModel.find({_id: userID});
     const comments = await CommentModel.find(
       {
-        user: user[0].login,
+        user: {name: user[0].login, id: user[0]._id},
         theme: req.params.id
       }
     )
+    console.log(comments)
     if (comments.length < 2){
       const doc = new CommentModel({
-        user: user[0].login,
+        user: {name: user[0].login, id:user[0]._id},
         text: req.body.text,
         theme: req.params.id
       });
@@ -54,6 +55,19 @@ export const edit = async (req, res) => {
       { returnOriginal: false },
     );
     res.json(comment)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({message: "Unable to get comments"});
+  }
+}
+
+export const deleteComm = async (req, res) => {
+  try {
+    await CommentModel.findOneAndDelete(
+      {_id: req.body.id},
+    );
+    res.json({success: true})
   }
   catch (err) {
     console.log(err);
