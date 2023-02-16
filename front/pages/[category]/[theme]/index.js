@@ -12,6 +12,7 @@ import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import { useRouter } from "next/router";
 import { CommentSection } from "../../../components/Comment/CommentSection";
 import { Comment } from "../../../components/Comment/Comment";
+import { AlertMessage } from "../../../components/AlertMessage";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -92,7 +93,7 @@ const giveStar = async (category, theme, r) => {
 };
 
 const postComment = async (category, theme, text) => {
- await fetch(
+ const res = await fetch(
   `${process.env.API_HOST}/categories/${category}/${theme}/comment`,
   {
    method: "POST",
@@ -105,6 +106,7 @@ const postComment = async (category, theme, text) => {
    }),
   }
  );
+ return res.json();
 };
 
 const likeCommentReq = async (category, theme, id) => {
@@ -169,6 +171,8 @@ const Theme = () => {
  const router = useRouter();
  const { category, theme } = router.query;
 
+ const [alert, setAlert] = useState("");
+
  const themeData = useQuery(["category", category, theme], () =>
   getTheme(category, theme)
  );
@@ -183,7 +187,6 @@ const Theme = () => {
   mutationFn: ({ category, theme, user, clickedMode }) =>
    postGame(category, theme, user, clickedMode),
   onSuccess: (data) => {
-   console.log(data);
    router.push(`/${category}/${theme}/${data._id}`);
   },
  });
@@ -193,9 +196,15 @@ const Theme = () => {
   await themeData.refetch();
  });
 
- const postCommentMutation = useMutation(async (req) => {
-  await postComment(req.category, req.theme, req.text);
-  await comments.refetch();
+ const postCommentMutation = useMutation({
+  mutationFn: ({ category, theme, text }) => postComment(category, theme, text),
+  onSuccess: (data) => {
+   if (data.message === "You can post up to 2 comments under a theme") {
+    setAlert(data.message);
+    setTimeout(() => setAlert(""), 5000);
+   }
+   comments.refetch();
+  },
  });
 
  const likeMutation = useMutation(async (req) => {
@@ -313,6 +322,7 @@ const Theme = () => {
        dislikes={ratingData.data[isEventOpened].dislikes}
       />
      )}
+     {alert !== "" && <AlertMessage>{alert}</AlertMessage>}
      <div className="w-full flex">
       <div className="flex-1 min-h-screen bg-slate-50 dark:bg-slate-800 p-10">
        <Link href={`/${themeData.data[0].category}`}>
