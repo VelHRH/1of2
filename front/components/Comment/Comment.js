@@ -42,7 +42,7 @@ export const Comment = ({
      <i class="fa-solid fa-arrow-down text-2xl"></i>
     </div>
    </div>
-   <div className="dark:bg-slate-900 flex-1 bg-slate-300 p-5 rounded-xl text-lg">
+   <div className="dark:bg-slate-900 flex-1 bg-slate-200 p-5 rounded-xl text-lg">
     <div className="flex justify-between">
      {!isEdit ? (
       <Link href="#" className="text-sky-500">
@@ -63,20 +63,20 @@ export const Comment = ({
       <div className="flex">
        <i
         onClick={() => setIsEdit(true)}
-        class="fa-solid fa-pen-to-square text-slate-500 cursor-pointer hover:scale-105 hover:text-sky-500 duration-300"
+        class="fa-solid fa-pen-to-square text-slate-600 dark:text-slate-400 cursor-pointer hover:scale-105 hover:text-sky-500 duration-300"
        ></i>
        <i
         onClick={() => delComment(id)}
-        class="fa-solid fa-trash text-slate-500 cursor-pointer hover:scale-105 hover:text-red-500 duration-300 ml-3"
+        class="fa-solid fa-trash text-slate-600 dark:text-slate-400 cursor-pointer hover:scale-105 hover:text-red-500 duration-300 ml-3"
        ></i>
       </div>
      )}
     </div>
     {!isEdit ? (
-     <div className="text-slate-400 mt-3">{curText}</div>
+     <div className="text-slate-600 dark:text-slate-400 mt-3">{curText}</div>
     ) : (
      <textarea
-      className="bg-slate-800 w-full text-slate-400 rounded-md p-2 font-typewriter"
+      className="bg-slate-800 w-full text-slate-600 dark:text-slate-400 rounded-md p-2 font-typewriter"
       value={curText}
       onChange={(e) => setCurText(e.target.value)}
      ></textarea>

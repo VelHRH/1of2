@@ -14,7 +14,7 @@ export const CommentSection = ({ submitCommentHandler }) => {
    <textarea
     value={text}
     onChange={(e) => setText(e.target.value)}
-    className="w-full p-2 rounded-md border-4 border-sky-600 h-20 focus:outline-none dark:bg-slate-900 bg-slate-300 text-slate-900 dark:text-slate-50 mt-2"
+    className="w-full p-2 rounded-md border-4 border-sky-600 h-20 focus:outline-none bg-transparent text-slate-900 dark:text-slate-50 mt-2"
     placeholder="Your comment..."
    ></textarea>
    <button

@@ -2,15 +2,21 @@ import React from "react";
 
 export const NumberBtn = ({ isClicked, children, handleModeChoice }) => {
  return (
-  <div
-   onClick={() => handleModeChoice(children)}
-   className={`${
-    isClicked
-     ? "bg-transparent text-blue-600 border-blue-600 shadow-none"
-     : "bg-gradient-to-r shadow-[5px_5px] from-cyan-500 to-blue-600 dark:text-slate-50 border-slate-800 dark:border-slate-50"
-   } text-xl md:text-2xl text-center py-2 border-4 dark:shadow-slate-50 shadow-slate-800 cursor-pointer rounded-2xl`}
-  >
-   {children}
+  <div>
+   <div
+    className={`${
+     isClicked && "bg-gradient-to-r from-cyan-500 to-blue-600"
+    } p-[5px] rounded-2xl`}
+   >
+    <div
+     onClick={() => handleModeChoice(children)}
+     className={`${
+      isClicked ? "text-sky-600" : "text-slate-300"
+     } text-xl md:text-2xl text-center py-2 cursor-pointer rounded-xl bg-slate-700 `}
+    >
+     {children}
+    </div>
+   </div>
   </div>
  );
 };
