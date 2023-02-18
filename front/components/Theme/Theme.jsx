@@ -8,7 +8,7 @@ export const Theme = (props) => {
      alt="Theme"
      className="w-full h-full object-cover rounded-t-2xl"
     />
-    <div className="bg-slate-200 dark:bg-slate-700 rounded-b-2xl flex flex-col p-2">
+    <div className="bg-slate-200 dark:bg-slate-900 rounded-b-2xl flex flex-col p-2">
      <div
       className={`flex justify-between text-xl items-center rounded-lg text-slate-900 dark:text-slate-50 mb-3`}
      >

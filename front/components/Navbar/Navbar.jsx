@@ -14,12 +14,11 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
 
   if (router.asPath.includes("creations")) {
    setActive("creations");
-  } else if (router.asPath.includes("community")) {
+  } else if (router.asPath.includes("user")) {
    setActive("community");
   } else if (
    router.asPath.includes("login") ||
-   router.asPath.includes("registration") ||
-   router.asPath.includes("user")
+   router.asPath.includes("registration")
   ) {
    setActive("login");
   } else {
@@ -87,7 +86,8 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
        <i className={`fa-solid fa-briefcase ${isOpened && "mr-3"}`}></i>
        <div className="text-xl">{isOpened && "creations"}</div>
       </Link>
-      <div
+      <Link
+       href={`/user/all`}
        onClick={() => {
         setActive("community");
        }}
@@ -98,7 +98,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       >
        <i className={`fa-solid fa-user-group ${isOpened && "mr-2"}`}></i>
        <div className="text-xl">{isOpened && "community"}</div>
-      </div>
+      </Link>
      </div>
     </div>
     <div
