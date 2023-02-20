@@ -13,7 +13,7 @@ export default function AllUsers() {
     <link rel="icon" href="/favicon.ico" />
    </Head>
    <div className="flex-1 min-h-screen bg-slate-50 dark:bg-slate-800 p-10">
-    <h1 className="text-4xl mb-7 dark:text-slate-50">Categories</h1>
+    <h1 className="text-4xl mb-7 dark:text-slate-50">1of2 community</h1>
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
     <div className="flex">
      <div className="w-1/3 flex flex-col mr-4">

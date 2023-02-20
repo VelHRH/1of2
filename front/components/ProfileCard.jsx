@@ -23,9 +23,16 @@ export const ProfileCard = (props) => {
    ></Image>
    <div className="w-11/12 text-center overflow-hidden">{children}</div>
    <div className="flex w-full justify-around mt-2">
-    <div className="">12</div>
+    <div className="flex items-center">
+     <i class="fa-solid fa-check text-sm"></i>
+     <div className="ml-2">12</div>
+    </div>
+
     <div className="border-l-2 border-slate-50"></div>
-    <div className="">5</div>
+    <div className="flex items-center">
+     <i class="fa-solid fa-plus text-sm"></i>
+     <div className="ml-2">5</div>
+    </div>
    </div>
   </div>
  );

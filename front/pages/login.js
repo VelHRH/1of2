@@ -28,8 +28,7 @@ const login = () => {
    setErr(data.message);
    return;
   }
-  await router.replace("/");
-  router.reload();
+  window.location.href = "/";
  };
  return (
   <div className="absolute top-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-600 w-full h-full overflow-hidden">
