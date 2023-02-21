@@ -1,14 +1,19 @@
 import Image from "next/dist/client/image";
+import { useInView } from "react-intersection-observer";
 
 export const ProfileCard = (props) => {
  const { children, rank, imgUrl, played, created } = props;
+ const { ref, inView } = useInView();
  return (
   <div
+   ref={ref}
    className={`${rank === "ruby" && "to-red-800"} ${
     rank === "gold" && "to-yellow-700"
    } ${rank === "diamond" && "to-sky-800"} ${
     rank === "common" && "to-slate-700"
-   } from-slate-900 text-slate-50 mb-4 w-full text-xl bg-gradient-to-tr p-2 flex flex-col items-center rounded-lg hover:scale-105 duration-300 cursor-pointer`}
+   } from-slate-900 text-slate-50 ${
+    inView ? "opacity-100" : "opacity-0"
+   } mb-4 w-full duration-700 text-xl bg-gradient-to-tr p-2 flex flex-col items-center rounded-lg hover:scale-105 cursor-pointer`}
   >
    <Image
     loader={() => imgUrl}

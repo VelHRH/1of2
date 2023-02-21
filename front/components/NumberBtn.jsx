@@ -11,8 +11,8 @@ export const NumberBtn = ({ isClicked, children, handleModeChoice }) => {
     <div
      onClick={() => handleModeChoice(children)}
      className={`${
-      isClicked ? "text-sky-600" : "text-slate-300"
-     } text-xl md:text-2xl text-center py-2 cursor-pointer rounded-xl bg-slate-700 `}
+      isClicked ? "text-sky-600" : "dark:text-slate-300 text-slate-600"
+     } text-xl md:text-2xl text-center py-2 cursor-pointer rounded-xl dark:bg-slate-700 bg-slate-200`}
     >
      {children}
     </div>

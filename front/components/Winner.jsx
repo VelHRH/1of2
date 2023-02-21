@@ -1,6 +1,7 @@
 import React from "react";
 
 export const Winner = ({ image, date }) => {
+ console.log(date);
  return (
   <div className="flex relative group cursor-pointer bg-slate-900 rounded-lg">
    <img

@@ -49,21 +49,19 @@ const Result = () => {
 
  useEffect(() => {
   console.log(data.top);
-  if (data.top[data.top.length - 1].wins === 0) {
+  if (data.top[0].wins === 0) {
    setTipText(
-    `Wow! You've got an interesting taste, as this is the first win for "${
-     data.top[data.top.length - 1].name
-    }" here.`
+    `Wow! You've got an interesting taste, as this is the first win for "${data.top[0].name}" here.`
    );
   } else {
    setTipText(
-    `Did you know? It's just ${data.top[data.top.length - 1].wins + 1}${
-     data.top[data.top.length - 1].wins + 1 === 2
+    `Did you know? It's just ${data.top[0].wins + 1}${
+     data.top[0].wins + 1 === 2
       ? "nd"
-      : data.top[data.top.length - 1].wins + 1 === 3
+      : data.top[0].wins + 1 === 3
       ? "rd"
       : "th"
-    } win for "${data.top[data.top.length - 1].name}" here.`
+    } win for "${data.top[0].name}" here.`
    );
   }
  }, []);
