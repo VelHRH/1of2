@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
+import styles from "../../../styles/Rating.module.css"
 import ChartRatings from "../../../components/ChartRatings";
 import { RatingElement } from "../../../components/RatingElement";
 import { FullEvenView } from "../../../components/FullEvenView";
@@ -69,9 +70,6 @@ const Rating = () => {
  );
 
  const [isEventOpened, setIsEventOpened] = useState(-1);
- const [items, setItems] = useState([]);
- const [curPage, setCurPage] = useState(1);
- const [fetching, setFetching] = useState(false);
 
  if (isLoading) return <div></div>;
  if (isError) console.log("ERROR");
@@ -160,6 +158,7 @@ const Rating = () => {
       next={fetchNextPage}
       hasMore={hasNextPage}
       dataLength={data.pages[0].data.length * data.pages.length}
+      className={`${styles.nobar}`}
      >
       {data.pages.map((pageData, i) =>
        pageData.data.map((event, index) => (

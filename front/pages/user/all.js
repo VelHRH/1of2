@@ -2,9 +2,35 @@ import Head from "next/head";
 import { Search } from "../../components/Search";
 import { useState } from "react";
 import { ProfileCard } from "../../components/ProfileCard";
+import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
+
+const getUsers = async () => {
+ const res = await fetch(`${process.env.API_HOST}/users/all`);
+ return res.json();
+};
+
+export const getServerSideProps = async (context) => {
+ const queryClient = new QueryClient();
+
+ await queryClient.prefetchQuery("allusers", () => getUsers());
+
+ const data = await getUsers();
+
+ if (data.message) {
+  return {
+   notFound: true,
+  };
+ }
+ return {
+  props: { dehydratedState: dehydrate(queryClient) },
+ };
+};
 
 export default function AllUsers() {
  const [searchVal, setSearchVal] = useState();
+
+ const users = useQuery("allusers", () => getUsers());
+ if (users.isLoading) return <div>Loading...</div>;
  return (
   <div className="w-full flex">
    <Head>
@@ -17,23 +43,46 @@ export default function AllUsers() {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
     <div className="flex">
      <div className="w-1/3 flex flex-col mr-4">
-      <ProfileCard rank="ruby">ccccccccccccccccccccccccc </ProfileCard>
-      <ProfileCard rank="diamond">aaaaaaaaaa </ProfileCard>
-      <ProfileCard rank="common"> aaaaaaaaaaaaaaaa</ProfileCard>
-      <ProfileCard rank="ruby">ccccccccccccccccccccccccc </ProfileCard>
+      {users.data
+       .filter((u, i) => i % 3 === 0)
+       .map((user) => (
+        <ProfileCard
+         rank={user.rank}
+         created={user.created.length}
+         imgUrl={user.imgUrl}
+         played={user.winners.length}
+        >
+         {user.login}
+        </ProfileCard>
+       ))}
      </div>
      <div className="w-1/3 flex flex-col mr-4">
-      <ProfileCard rank="diamond">aaaaaaaaaa </ProfileCard>
-      <ProfileCard rank="ruby">ccccccccccccccccccccccccc </ProfileCard>
-      <ProfileCard rank="gold">
-       sssssssssssssssssss ssssssssssssssssss{" "}
-      </ProfileCard>
-      <ProfileCard rank="common"> aaaaaaaaaaaaaaaa</ProfileCard>
+      {users.data
+       .filter((u, i) => i % 3 === 1)
+       .map((user) => (
+        <ProfileCard
+         rank={user.rank}
+         created={user.created.length}
+         imgUrl={user.imgUrl}
+         played={user.winners.length}
+        >
+         {user.login}
+        </ProfileCard>
+       ))}
      </div>
      <div className="w-1/3 flex flex-col">
-      <ProfileCard rank="diamond">aaaaaaaaaa </ProfileCard>
-      <ProfileCard rank="common"> aaaaaaaaaaaaaaaa</ProfileCard>
-      <ProfileCard rank="ruby">ccccccccccccccccccccccccc </ProfileCard>
+      {users.data
+       .filter((u, i) => i % 3 === 2)
+       .map((user) => (
+        <ProfileCard
+         rank={user.rank}
+         created={user.created.length}
+         imgUrl={user.imgUrl}
+         played={user.winners.length}
+        >
+         {user.login}
+        </ProfileCard>
+       ))}
      </div>
     </div>
    </div>
