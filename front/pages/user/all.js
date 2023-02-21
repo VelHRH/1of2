@@ -3,6 +3,7 @@ import { Search } from "../../components/Search";
 import { useState } from "react";
 import { ProfileCard } from "../../components/ProfileCard";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
+import Link from "next/link";
 
 const getUsers = async () => {
  const res = await fetch(`${process.env.API_HOST}/users/all`);
@@ -46,47 +47,79 @@ export default function AllUsers() {
       {users.data
        .filter((u, i) => i % 3 === 0)
        .map((user) => (
-        <ProfileCard
-         rank={user.rank}
-         created={user.created.length}
-         imgUrl={user.imgUrl}
-         played={user.winners.length}
-        >
-         {user.login}
-        </ProfileCard>
+        <Link href={`/user/${user._id}`}>
+         <ProfileCard
+          rank={user.rank}
+          created={user.created.length}
+          imgUrl={user.imgUrl}
+          played={user.winners.length}
+         >
+          {user.login}
+         </ProfileCard>
+        </Link>
        ))}
      </div>
      <div className="w-1/3 flex flex-col mr-4">
       {users.data
        .filter((u, i) => i % 3 === 1)
        .map((user) => (
-        <ProfileCard
-         rank={user.rank}
-         created={user.created.length}
-         imgUrl={user.imgUrl}
-         played={user.winners.length}
-        >
-         {user.login}
-        </ProfileCard>
+        <Link href={`/user/${user._id}`}>
+         <ProfileCard
+          rank={user.rank}
+          created={user.created.length}
+          imgUrl={user.imgUrl}
+          played={user.winners.length}
+         >
+          {user.login}
+         </ProfileCard>
+        </Link>
        ))}
      </div>
      <div className="w-1/3 flex flex-col">
       {users.data
        .filter((u, i) => i % 3 === 2)
        .map((user) => (
-        <ProfileCard
-         rank={user.rank}
-         created={user.created.length}
-         imgUrl={user.imgUrl}
-         played={user.winners.length}
-        >
-         {user.login}
-        </ProfileCard>
+        <Link href={`/user/${user._id}`}>
+         <ProfileCard
+          rank={user.rank}
+          created={user.created.length}
+          imgUrl={user.imgUrl}
+          played={user.winners.length}
+         >
+          {user.login}
+         </ProfileCard>
+        </Link>
        ))}
      </div>
     </div>
    </div>
-   <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen"></div>
+   <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
+    <div className="text-xl dark:text-slate-50">
+     Total registered: {users.data.length}
+    </div>
+    <div className="text-2xl dark:text-slate-50 mt-14 mb-5">
+     Top 1of2 contributors:
+    </div>
+    {users.data.length > 1 &&
+     users.data
+      .slice(0, 5)
+      .sort((a, b) => b.created.length - a.created.length)
+      .map((u, index) => (
+       <div key={index} className="h-[70px] w-full mb-3 rounded-xl">
+        <div className="w-full h-full flex justify-between items-center text-2xl">
+         <img
+          onClick={() => setIsEventOpened(index)}
+          src={u.imgUrl}
+          alt="Top"
+          className="h-full aspect-square object-cover rounded-full cursor-pointer"
+         />
+         <h1 className="dark:text-slate-50">
+          {u.created.length} <span className="text-lg">themes</span>
+         </h1>
+        </div>
+       </div>
+      ))}
+   </div>
   </div>
  );
 }
