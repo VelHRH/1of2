@@ -6,6 +6,8 @@ const Create = () => {
  const [name, setName] = useState("");
  const [thumbUrl, setThumbUrl] = useState("");
  const [creationStage, setCreationStage] = useState(1);
+ const [pEvents, setPEvents] = useState([]);
+ const [nEvents, setNEvents] = useState([""]);
  useEffect(() => {
   if (name.length > 2) {
    setCreationStage(2);
@@ -20,6 +22,12 @@ const Create = () => {
    setCreationStage(1);
   }
  }, [name, thumbUrl]);
+
+ useEffect(() => {
+  if (nEvents[nEvents.length - 1].length > 0 && pEvents[nEvents.length - 1]) {
+   setNEvents((prev) => [...prev, ""]);
+  }
+ }, [nEvents, pEvents]);
 
  return (
   <div className="w-full flex">
@@ -55,6 +63,58 @@ const Create = () => {
       <p className="dark:text-slate-50 mr-5 text-xl py-2 w-full">
        Add elements to you theme (at least 8):
       </p>
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-600 p-1">
+       <div className="bg-slate-50 dark:bg-slate-800 p-2 grid grid-cols-2 gap-2">
+        {nEvents.map((ev, i) => (
+         <div className="flex p-2 bg-slate-200 dark:bg-slate-900 rounded-md">
+          {pEvents[i] !== undefined && pEvents[i].name !== undefined ? (
+           <>
+            <img
+             src={URL.createObjectURL(pEvents[i])}
+             className="w-[32px] aspect-square object-cover mr-2"
+            />
+           </>
+          ) : (
+           <>
+            <label for="uploadImg" className="mr-2">
+             <i class="fa-solid fa-download text-sky-500 text-2xl hover:scale-110 hover:text-sky-500 dark:hover:text-sky-500 duration-300 cursor-pointer"></i>
+            </label>
+            <input
+             type="file"
+             id="uploadImg"
+             accept="image/*"
+             className="hidden"
+             onChange={(e) => {
+              if (e.target.files.length > 0) {
+               let p = pEvents;
+               p[i] = [...e.target.files][0];
+               setPEvents((prev) => [...prev, p[p.length]]);
+              }
+             }}
+            />
+           </>
+          )}
+
+          <input
+           type="text"
+           value={nEvents[i]}
+           onChange={(e) => {
+            let items = [...nEvents];
+            items[i] = e.target.value;
+            setNEvents(items);
+           }}
+           className="flex-1 bg-transparent p-1 border-b-2 border-sky-500 focus:outline-none dark:text-slate-50"
+          />
+         </div>
+        ))}
+       </div>
+      </div>
+     </div>
+     <div className="text-center mt-10 dark:text-slate-50">
+      Total: {nEvents.length - 1} items
+     </div>
+     <div className="text-center py-2 text-2xl my-2 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-105 cursor-pointer ease-in-out duration-500">
+      Create theme
      </div>
     </form>
    </div>
