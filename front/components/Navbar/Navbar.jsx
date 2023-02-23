@@ -82,7 +82,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600"
        }`}
       >
-       <i className={`fa-solid fa-briefcase ${isOpened && "mr-3"}`}></i>
+       <i className={`fa-solid fa-plus ${isOpened && "mr-3"}`}></i>
        <div className="text-xl">{isOpened && "creations"}</div>
       </Link>
       <Link

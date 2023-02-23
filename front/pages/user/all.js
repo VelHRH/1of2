@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { Search } from "../../components/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProfileCard } from "../../components/ProfileCard";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import Link from "next/link";
@@ -28,10 +28,21 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function AllUsers() {
- const [searchVal, setSearchVal] = useState();
-
+ const [searchVal, setSearchVal] = useState("");
  const users = useQuery("allusers", () => getUsers());
+ const [searchedUsers, setSearchedUsers] = useState(users.data);
  if (users.isLoading) return <div>Loading...</div>;
+ useEffect(() => {
+  setSearchedUsers(
+   users.data
+    .reverse()
+    .filter(
+     (u) =>
+      u.login.slice(0, searchVal.length).toUpperCase() ===
+      searchVal.toUpperCase()
+    )
+  );
+ }, [searchVal]);
  return (
   <div className="w-full flex">
    <Head>
@@ -44,7 +55,7 @@ export default function AllUsers() {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
     <div className="flex">
      <div className="w-1/3 flex flex-col mr-4">
-      {users.data
+      {searchedUsers
        .filter((u, i) => i % 3 === 0)
        .map((user) => (
         <Link href={`/user/${user._id}`}>
@@ -60,7 +71,7 @@ export default function AllUsers() {
        ))}
      </div>
      <div className="w-1/3 flex flex-col mr-4">
-      {users.data
+      {searchedUsers
        .filter((u, i) => i % 3 === 1)
        .map((user) => (
         <Link href={`/user/${user._id}`}>
@@ -76,7 +87,7 @@ export default function AllUsers() {
        ))}
      </div>
      <div className="w-1/3 flex flex-col">
-      {users.data
+      {searchedUsers
        .filter((u, i) => i % 3 === 2)
        .map((user) => (
         <Link href={`/user/${user._id}`}>
