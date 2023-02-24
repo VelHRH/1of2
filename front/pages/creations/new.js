@@ -110,12 +110,16 @@ const Create = () => {
        </div>
       </div>
      </div>
-     <div className="text-center mt-10 dark:text-slate-50">
-      Total: {nEvents.length - 1} items
-     </div>
-     <div className="text-center py-2 text-2xl my-2 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-105 cursor-pointer ease-in-out duration-500">
-      Create theme
-     </div>
+     {creationStage === 3 && (
+      <>
+       <div className="text-center mt-10 dark:text-slate-50">
+        Total: {nEvents.length - 1} items
+       </div>
+       <div className="text-center py-2 text-2xl my-2 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-105 cursor-pointer ease-in-out duration-500">
+        Create theme
+       </div>
+      </>
+     )}
     </form>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center"></div>
