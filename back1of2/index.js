@@ -1,5 +1,6 @@
 import express from "express"
 import mongoose from "mongoose";
+import multer from "multer";
 import * as CategoryController from "./controllers/CategoryController.js"
 import * as SubController from "./controllers/SubController.js"
 import * as EventController from "./controllers/EventController.js"
@@ -17,8 +18,20 @@ mongoose.connect(
 
 const app = express();
 
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({storage});
+
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static('uploads'));
 
 app.get('/categories', CategoryController.getAll);
 app.get('/categories/:name', CategoryController.getOne);
@@ -40,10 +53,19 @@ app.delete('/categories/:name/:theme/delete', checkAuth, CommentController.delet
 app.post('/categories/:name/:theme/likecomment', checkAuth, CommentController.likeComment);
 app.post('/categories/:name/:theme/dislikecomment', checkAuth, CommentController.dislikeComment);
 
+app.post('/theme/add', checkAuth, SubController.add);
+
 app.post('/register', registerValidation, UserController.register);
+app.get('/users/all', UserController.getAll)
 app.post('/login', UserController.login);
 app.get('/me', checkAuth, UserController.me);
 app.post('/me', UserController.me);
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+  res.json({
+    url: `uploads/${req.file.originalname}`,
+  });
+});
 
 app.listen(4444, (err) => {
   if (err) {

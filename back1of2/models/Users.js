@@ -16,6 +16,14 @@ const UsersSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  created:{
+    type: Array,
+    default: []
+  },
+  rank: {
+    type: String,
+    default: "common"
+  },
   winners: {
     type: Array,
     required: true,

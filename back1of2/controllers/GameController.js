@@ -1,7 +1,6 @@
 import ResultModel from "../models/Result.js";
 import EventModel from "../models/Event.js";
 import UsersModel from "../models/Users.js";
-import mongoose from "mongoose";
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -158,7 +157,7 @@ export const results = async (req, res) => {
    }
    await UsersModel.findOneAndUpdate(
     {_id: req.body.user}, 
-    {$push: {winners: {...result.results[0], sessionId: session}}}, 
+    {$push: {winners: {...result.results[0], sessionId: session, date: new Date()}}}, 
   );
   }
    return res.json({success: true});

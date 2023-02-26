@@ -6,8 +6,7 @@ const ThemeSchema = new mongoose.Schema({
     required: true,
   },
   category: {
-    type: String,
-    required: true,
+    type: String
   },
   imgUrl: {
     type: String,
@@ -21,7 +20,7 @@ const ThemeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  desctiption: {
+  description: {
     type: String,
     required: true,
   },

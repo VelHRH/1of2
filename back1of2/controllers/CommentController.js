@@ -11,7 +11,6 @@ export const add = async (req, res) => {
         theme: req.params.id
       }
     )
-    console.log(comments)
     if (comments.length < 2){
       const doc = new CommentModel({
         user: {name: user[0].login, id:user[0]._id},
@@ -19,10 +18,10 @@ export const add = async (req, res) => {
         theme: req.params.id
       });
       const comment = await doc.save();
-      res.json(comment);
+      return res.json(comment);
     }
     else{
-      res.status(403).json({message: "You can post up to 2 comments under a theme"});
+      return res.status(403).json({message: "You can post up to 2 comments under a theme"});
     }
    
   }

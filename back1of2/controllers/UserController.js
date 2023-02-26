@@ -80,3 +80,17 @@ export const me = async (req, res) => {
     res.status(500).json({ message: "Unable to see the information" });
   }
 }
+
+export const getAll = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    if (!users) {
+      return res.status(403).json({ message: "No users found" });
+    }
+    res.json(users)
+  }
+  catch (err){
+    console.log(err);
+    res.status(500).json({ message: "Unable to see the information" });
+  }
+}

@@ -1,5 +1,6 @@
 import ThemeModel from "../models/Theme.js"
 import CategoryModel from "../models/Category.js"
+import UserModel from "../models/Users.js"
 
 export const getOne = async (req, res) => {
   try {
@@ -63,5 +64,26 @@ export const giveStars = async (req, res) => {
   } catch (err) {
    console.log(err);
    res.status(500).json({ message: "Unable to rate the theme" });
+  }
+ };
+
+
+ export const add = async (req, res) => {
+  try {
+    const user = await req.userId;
+    const userName = await UserModel.find({_id: user});
+    console.log(userName)
+    const doc = new ThemeModel({
+      name: req.body.name,
+      imgUrl: req.body.imgUrl,
+      stars: [],
+      author: userName[0].login,
+      description: req.body.description,
+    });
+    const theme = await doc.save();
+    return res.json(theme);
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to add theme" });
   }
  };
