@@ -95,3 +95,24 @@ export const results = async (req, res) => {
   });
  }
 };
+
+
+export const addEvents = async (req, res) => {
+  try {
+    for (let i = 0; i<req.body.pictures.length; i++){
+      const doc = new EventModel({
+        name: req.body.names[i],
+        imgUrl: req.body.pictures[i],
+        likes: 0,
+        dislikes: 0,
+        wins: 0,
+        subcategory: req.body.theme,
+      });
+      await doc.save();
+    }
+    return res.json({success: true});
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Failed to add events" });
+  }
+ };

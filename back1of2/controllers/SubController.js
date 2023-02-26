@@ -72,7 +72,6 @@ export const giveStars = async (req, res) => {
   try {
     const user = await req.userId;
     const userName = await UserModel.find({_id: user});
-    console.log(userName)
     const doc = new ThemeModel({
       name: req.body.name,
       imgUrl: req.body.imgUrl,

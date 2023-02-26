@@ -57,6 +57,7 @@ app.post('/categories/:name/:theme/likecomment', checkAuth, CommentController.li
 app.post('/categories/:name/:theme/dislikecomment', checkAuth, CommentController.dislikeComment);
 
 app.post('/theme/add', checkAuth, SubController.add);
+app.post('/events/add', checkAuth, EventController.addEvents);
 
 app.post('/register', registerValidation, UserController.register);
 app.get('/users/all', UserController.getAll)
