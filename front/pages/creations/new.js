@@ -2,12 +2,34 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import Head from "next/head";
 import { Input } from "../../components/Input";
 
+const uploadImg = async (formData) => {
+ await fetch(`${process.env.API_HOST}/upload`, {
+  method: "POST",
+  headers: {
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: formData,
+ });
+};
+
 const Create = () => {
  const [name, setName] = useState("");
  const [thumbUrl, setThumbUrl] = useState("");
  const [creationStage, setCreationStage] = useState(1);
  const [pEvents, setPEvents] = useState([]);
  const [nEvents, setNEvents] = useState([""]);
+
+ const addImgHandler = async (e, i) => {
+  if (e.target.files.length > 0) {
+   const formData = new FormData();
+   let p = pEvents;
+   p[i] = e.target.files[0];
+   setPEvents((prev) => [...prev, p[p.length]]);
+   formData.append("image", e.target.files[0]);
+   await uploadImg(formData);
+  }
+ };
+
  useEffect(() => {
   if (name.length > 2) {
    setCreationStage(2);
@@ -84,13 +106,7 @@ const Create = () => {
              id="uploadImg"
              accept="image/*"
              className="hidden"
-             onChange={(e) => {
-              if (e.target.files.length > 0) {
-               let p = pEvents;
-               p[i] = [...e.target.files][0];
-               setPEvents((prev) => [...prev, p[p.length]]);
-              }
-             }}
+             onChange={(e) => addImgHandler(e, i)}
             />
            </>
           )}
@@ -110,7 +126,7 @@ const Create = () => {
        </div>
       </div>
      </div>
-     {creationStage === 3 && (
+     {nEvents.length >= 9 && (
       <>
        <div className="text-center mt-10 dark:text-slate-50">
         Total: {nEvents.length - 1} items
