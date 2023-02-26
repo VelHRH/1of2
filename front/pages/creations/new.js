@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Head from "next/head";
 import { Input } from "../../components/Input";
+import { useRouter } from "next/router";
 
 const uploadImg = async (formData) => {
  await fetch(`${process.env.API_HOST}/upload`, {
@@ -12,13 +13,45 @@ const uploadImg = async (formData) => {
  });
 };
 
+const addTheme = async (name, imgUrl, description) => {
+ await fetch(`${process.env.API_HOST}/theme/add`, {
+  method: "POST",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+   name,
+   imgUrl,
+   description,
+  }),
+ });
+};
+
+const addEvents = async (names, theme, pictures) => {
+ await fetch(`${process.env.API_HOST}/events/add`, {
+  method: "POST",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: `${window.localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+   names,
+   theme,
+   pictures,
+  }),
+ });
+};
+
 const Create = () => {
  const [name, setName] = useState("");
  const [thumbUrl, setThumbUrl] = useState("");
+ const [description, setDescription] = useState("");
  const [creationStage, setCreationStage] = useState(1);
  const [pEvents, setPEvents] = useState([]);
  const [nEvents, setNEvents] = useState([""]);
 
+ const router = useRouter();
  const addImgHandler = async (e, i) => {
   if (e.target.files.length > 0) {
    const formData = new FormData();
@@ -30,20 +63,40 @@ const Create = () => {
   }
  };
 
+ const submitHandler = async () => {
+  try {
+   await addTheme(name, thumbUrl, description);
+   await addEvents(
+    nEvents.slice(0, -1),
+    name,
+    pEvents.slice(0, -1).map((p) => p.name)
+   );
+   await router.push("/creations");
+  } catch (err) {
+   console.log(err);
+  }
+ };
+
  useEffect(() => {
   if (name.length > 2) {
    setCreationStage(2);
   }
-  if (thumbUrl.length > 3) {
+  if (thumbUrl.length > 4) {
    setCreationStage(3);
   }
-  if (thumbUrl.length < 7) {
+  if (description.length >= 10) {
+   setCreationStage(4);
+  }
+  if (description.length < 10) {
+   setCreationStage(3);
+  }
+  if (thumbUrl.length <= 4) {
    setCreationStage(2);
   }
   if (name.length < 3) {
    setCreationStage(1);
   }
- }, [name, thumbUrl]);
+ }, [name, thumbUrl, description]);
 
  useEffect(() => {
   if (nEvents[nEvents.length - 1].length > 0 && pEvents[nEvents.length - 1]) {
@@ -60,12 +113,16 @@ const Create = () => {
    </Head>
    <div className="flex-1 min-h-screen bg-slate-50 dark:bg-slate-800 p-10">
     <h1 className="text-4xl mb-7 dark:text-slate-50">Create new theme</h1>
-    <form className="">
+    <form>
      <div className="flex">
       <p className="dark:text-slate-50 mr-5 text-xl py-2 w-1/4">
        Name for your theme:
       </p>
-      <Input inputValue={name} setInputValue={setName} />
+      <Input
+       inputValue={name}
+       setInputValue={setName}
+       placeholder="2+ symbols.."
+      />
      </div>
      <div
       className={`${
@@ -75,11 +132,29 @@ const Create = () => {
       <p className="dark:text-slate-50 mr-5 text-xl py-2 w-1/4">
        Thumbnail for your theme:
       </p>
-      <Input inputValue={thumbUrl} setInputValue={setThumbUrl} />
+      <Input
+       inputValue={thumbUrl}
+       setInputValue={setThumbUrl}
+       placeholder="4+ symbols.."
+      />
      </div>
      <div
       className={`${
        creationStage < 3 ? "opacity-0" : "opacity-100"
+      } flex transition duration-700`}
+     >
+      <p className="dark:text-slate-50 mr-5 text-xl py-2 w-1/4">
+       Description for your theme:
+      </p>
+      <Input
+       inputValue={description}
+       setInputValue={setDescription}
+       placeholder="10+ symbols.."
+      />
+     </div>
+     <div
+      className={`${
+       creationStage < 4 ? "opacity-0" : "opacity-100"
       } flex flex-col transition duration-700`}
      >
       <p className="dark:text-slate-50 mr-5 text-xl py-2 w-full">
@@ -126,12 +201,15 @@ const Create = () => {
        </div>
       </div>
      </div>
-     {nEvents.length >= 9 && (
+     {nEvents.length >= 2 && (
       <>
        <div className="text-center mt-10 dark:text-slate-50">
         Total: {nEvents.length - 1} items
        </div>
-       <div className="text-center py-2 text-2xl my-2 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-105 cursor-pointer ease-in-out duration-500">
+       <div
+        onClick={() => submitHandler()}
+        className="text-center py-2 text-2xl my-2 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-105 cursor-pointer ease-in-out duration-500"
+       >
         Create theme
        </div>
       </>
