@@ -13,7 +13,6 @@ import { useRouter } from "next/router";
 import { CommentSection } from "../../../components/Comment/CommentSection";
 import { Comment } from "../../../components/Comment/Comment";
 import { AlertMessage } from "../../../components/AlertMessage";
-import { useImage } from "../../../hooks/useImage";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -444,7 +443,7 @@ const Theme = () => {
           <div className="w-full h-full flex justify-between items-center text-2xl">
            <img
             onClick={() => setIsEventOpened(index)}
-            src={useImage(r.imgUrl)}
+            src={r.imgUrl}
             alt="Top"
             className="h-full aspect-square object-cover rounded-full cursor-pointer"
            />

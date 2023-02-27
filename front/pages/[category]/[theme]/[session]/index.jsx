@@ -93,16 +93,14 @@ const Game = () => {
        height={500}
        className="w-full h-full object-cover blur-md"
       />
-      <Image
+      <img
        loader={() => curr.data.current[0].imgUrl}
        onClick={() => nextClickHandler(curr.data.current[0])}
        src={curr.data.current[0].imgUrl}
        alt="Choice1"
-       placeholder="blur"
-       blurDataURL={curr.data.current[0].imgUrl}
        width={200}
        height={500}
-       className={`absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover top-[160px] md:top-[220px] md:left-[calc(80px+(100%-80px)/4)] left-1/2 translate-x-[-50%] shadow-2xl hover:-rotate-3 ease-in-out duration-300`}
+       className={`absolute cursor-pointer bg-transparent w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-contain top-[160px] md:top-[220px] md:left-[calc(80px+(100%-80px)/4)] left-1/2 translate-x-[-50%] shadow-2xl hover:-rotate-3 ease-in-out duration-300`}
       />
      </div>
      <div className="w-full md:w-1/2 h-[300px] md:h-[600px]">
@@ -123,7 +121,7 @@ const Game = () => {
        alt="Choice1"
        width={200}
        height={500}
-       className={`absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-cover right-1/2 md:right-[calc((100%-80px)/4)] top-[470px] md:top-[220px] translate-x-[50%] shadow-2xl hover:rotate-3 ease-in-out duration-300`}
+       className={`absolute cursor-pointer w-[350px] h-[200px] md:w-[650px] md:h-[380px] object-contain right-1/2 md:right-[calc((100%-80px)/4)] top-[470px] md:top-[220px] translate-x-[50%] shadow-2xl hover:rotate-3 ease-in-out duration-300`}
       />
      </div>
     </div>

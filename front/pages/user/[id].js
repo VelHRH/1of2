@@ -91,11 +91,11 @@ const Me = () => {
    {isEventOpened > -1 && (
     <FullEvenView
      setIsEventOpened={setIsEventOpened}
-     link={favouriteList(data.winners)[isEventOpened].imgUrl}
-     name={favouriteList(data.winners)[isEventOpened].name}
-     wins={favouriteList(data.winners)[isEventOpened].wins}
-     likes={favouriteList(data.winners)[isEventOpened].likes}
-     dislikes={favouriteList(data.winners)[isEventOpened].dislikes}
+     link={favouriteList(userInfo.data.winners)[isEventOpened].imgUrl}
+     name={favouriteList(userInfo.data.winners)[isEventOpened].name}
+     wins={favouriteList(userInfo.data.winners)[isEventOpened].wins}
+     likes={favouriteList(userInfo.data.winners)[isEventOpened].likes}
+     dislikes={favouriteList(userInfo.data.winners)[isEventOpened].dislikes}
     />
    )}
    <div className="flex-1 min-h-screen bg-slate-50 dark:bg-slate-800 p-10">
@@ -107,7 +107,7 @@ const Me = () => {
         <Link href={`/${winner.category}/${winner.subcategory}/${winner.sessionId}/result`}>
        <Winner image={winner.imgUrl} date={winner.date} />
        </Link>
-      ))}
+      )).reverse()}
      </div>
      <div className="text-xl md:text-3xl border-b-2 border-slate-600 p-2 my-4 mt-7 dark:text-slate-50">
       Your favourites

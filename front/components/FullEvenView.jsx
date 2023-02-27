@@ -7,15 +7,12 @@ export const FullEvenView = ({
  dislikes,
 }) => {
  return (
-  <>
-   <div
-    onClick={() => setIsEventOpened(-1)}
-    className="fixed left-0 top-0 w-screen h-screen overscroll-none bg-slate-800 z-30 opacity-90"
-   ></div>
+  <div className="cursor-pointer" onClick={() => setIsEventOpened(-1)}>
+   <div className="fixed left-0 top-0 w-screen h-screen overscroll-none bg-slate-800 z-30 opacity-90"></div>
    <img
     src={link}
     alt="Image"
-    className="w-[800px] h-[450px] object-cover fixed left-[50%] translate-x-[-50%] top-10 z-40"
+    className="w-[800px] h-[450px] object-scale-down fixed left-[50%] translate-x-[-50%] top-10 z-40"
    />
    <div className="flex flex-col fixed bottom-20 left-[50%] translate-x-[-50%] z-50 items-center">
     <div className="text-yellow-400 text-4xl mb-4">{name}</div>
@@ -43,6 +40,6 @@ export const FullEvenView = ({
      </div>
     </div>
    </div>
-  </>
+  </div>
  );
 };

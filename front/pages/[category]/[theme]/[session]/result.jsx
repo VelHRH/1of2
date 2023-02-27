@@ -123,7 +123,7 @@ const Result = () => {
            <img
             src={result.imgUrl}
             alt="Team1"
-            className={`mb-2 h-[250px] w-full cursor-pointer object-cover ${
+            className={`mb-2 h-[250px] w-full cursor-pointer object-contain ${
              !isGrey(index) && "grayscale"
             }`}
            />
@@ -137,7 +137,7 @@ const Result = () => {
            <img
             src={result.imgUrl}
             alt="Team2"
-            className={`mb-2 h-[250px] w-full cursor-pointer object-cover ${
+            className={`mb-2 h-[250px] w-full cursor-pointer object-contain ${
              !isGrey(index) && "grayscale"
             }`}
            />

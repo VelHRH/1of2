@@ -5,7 +5,7 @@ export const ResultElement = ({ imgUrl, place }) => {
    <img
     src={imgUrl}
     alt="Result"
-    className="w-[90%] md:w-[95%] h-full object-cover"
+    className="w-[90%] md:w-[95%] h-full object-cover object-top"
    />
   </div>
  );

@@ -1,5 +1,4 @@
-import { useState} from "react";
-import { useImage } from "../../../hooks/useImage";
+import { useEffect, useState} from "react";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
@@ -61,7 +60,7 @@ const Rating = () => {
 
  const { data, fetchNextPage, hasNextPage, isLoading, isError } =
   useInfiniteQuery(
-   "rating",
+   ["rating", theme],
    ({ pageParam = 0 }) => getRating(category, theme, pageParam),
    { getNextPageParam: (lastPage) => lastPage.nextPage }
   );
@@ -167,7 +166,7 @@ const Rating = () => {
          <RatingElement
           key={event._id}
           index={index + 1 + i * 8}
-          image={useImage(event.imgUrl)}
+          image={event.imgUrl}
           wins={event.wins}
           handleClick={handleClick}
          >
@@ -194,7 +193,8 @@ const Rating = () => {
        <div className="w-full h-full flex justify-between items-center text-2xl">
         <img
          onClick={() => setIsEventOpened(index)}
-         src={useImage(r.imgUrl)}
+         src={r.imgUrl }
+    
          alt="Top"
          className="h-full aspect-square object-cover rounded-full cursor-pointer"
         />
