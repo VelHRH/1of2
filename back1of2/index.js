@@ -10,7 +10,6 @@ import * as GameController from "./controllers/GameController.js"
 import cors from "cors"
 import { registerValidation } from './validations.js'
 import checkAuth from './utils/checkAuth.js'
-import bodyParser from 'body-parser'
 
 mongoose.connect(
   'mongodb+srv://admin:wwwwww@cluster0.soz1hvz.mongodb.net/1of2?retryWrites=true&w=majority')
@@ -18,6 +17,7 @@ mongoose.connect(
   .catch((err) => console.log("DB error", err))
 
 const app = express();
+app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -31,10 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 app.use(express.json());
-app.use(cors());
 app.use('/uploads', express.static('uploads'));
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 app.get('/categories', CategoryController.getAll);
 app.get('/categories/:name', CategoryController.getOne);

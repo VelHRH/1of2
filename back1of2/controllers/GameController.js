@@ -23,6 +23,9 @@ export const results = async (req, res) => {
    const user = await UsersModel.findById(req.body.user);
    const id = await req.params.id;
    let events = await EventModel.find({ subcategory: id });
+   for (let i in events){
+    if (events[i].imgUrl.slice(0,4) !== "http") events[i].imgUrl = `${process.env.PORT || "http://localhost:4444"}/uploads/${events[i].imgUrl}`
+  }
    if (events.length === 0) {
     return res
      .status(404)
@@ -157,7 +160,7 @@ export const results = async (req, res) => {
    }
    await UsersModel.findOneAndUpdate(
     {_id: req.body.user}, 
-    {$push: {winners: {...result.results[0], sessionId: session, date: new Date()}}}, 
+    {$push: {winners: {...result.results[result.results.length-1], sessionId: session, date: new Date()}}}, 
   );
   }
    return res.json({success: true});

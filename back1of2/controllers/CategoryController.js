@@ -31,3 +31,4 @@ export const getOne = async (req, res) => {
     res.status(500).json({message: "Unable to get category"});
   }
 }
+
