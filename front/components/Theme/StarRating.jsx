@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 export const StarRating = ({ rating, starClickHandler }) => {
  const [hoveredRating, setHoveredRating] = useState(0);
  return (
-  <div className="flex">
-   <h1 className="text-3xl mb-3 dark:text-slate-50 mr-5">
+  <div className="flex flex-col">
+   <h1 className="text-xl mb-1 dark:text-slate-50 self-end">
     {rating !== 0 ? "" : "Rate this:"}
    </h1>
    <div className="text-slate-900 dark:text-slate-50 cursor-pointer">

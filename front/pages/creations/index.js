@@ -3,9 +3,43 @@ import Head from "next/head";
 import { FunTip } from "../../components/FunTip";
 import { Search } from "../../components/Search";
 import Link from "next/link";
+import { useQuery, QueryClient, dehydrate } from "react-query";
+import { Theme } from "../../components/Theme/Theme";
+
+const getThemes = async () => {
+  const res = await fetch(`${process.env.API_HOST}/categories/creations`);
+  return res.json();
+}
+
+export const getServerSideProps = async () => {
+  const queryClient = new QueryClient();
+
+ await queryClient.prefetchQuery("custom themes", () => getThemes());
+ 
+ const data = await getThemes();
+ 
+ if (data.length===0) {
+  return {
+   notFound: true,
+  };
+ }
+ return {
+  props: { dehydratedState: dehydrate(queryClient) },
+ };
+}
 
 const Creations = () => {
  const [searchVal, setSearchVal] = useState("");
+ 
+ const themes = useQuery("custom themes", () => getThemes());
+
+ const CountStars = (arr) => {
+  let sum = 0;
+  arr.map((item) => (sum += item.stars));
+  return sum / arr.length;
+ };
+
+ if (themes.isLoading) return <div>Loading...</div>;
  return (
   <div className="w-full flex">
    <Head>
@@ -16,6 +50,17 @@ const Creations = () => {
    <div className="flex-1 min-h-screen bg-slate-50 dark:bg-slate-800 p-10">
     <h1 className="text-4xl mb-7 dark:text-slate-50">Creations</h1>
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
+    <div className="grid gap-4 grid-cols-2">
+    {themes.data.map(theme => <Link href={`/creations/${theme.name}`}>
+         <Theme
+          name={theme.name}
+          stars={CountStars(theme.stars)}
+          imgUrl={theme.imgUrl}
+          author={theme.author}
+          description={theme.description}
+         />
+        </Link>)}
+    </div>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
     <Link className="w-full" href={`/creations/new`}>

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { CommentSection } from "../../../components/Comment/CommentSection";
 import { Comment } from "../../../components/Comment/Comment";
 import { AlertMessage } from "../../../components/AlertMessage";
+import { useImage } from "../../../hooks/useImage";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -328,8 +329,8 @@ const Theme = () => {
        <Link href={`/${themeData.data[0].category}`}>
         <BackBtn>{themeData.data[0].category}</BackBtn>
        </Link>
-       <div className="flex justify-between w-full">
-        <h1 className="text-4xl mb-7 dark:text-slate-50 capitalize">
+       <div className="flex justify-between w-full items-center mb-7">
+        <h1 className="text-4xl dark:text-slate-50 capitalize w-[70%]">
          {themeData.data[0].name}
         </h1>
         {isRating && (
@@ -443,7 +444,7 @@ const Theme = () => {
           <div className="w-full h-full flex justify-between items-center text-2xl">
            <img
             onClick={() => setIsEventOpened(index)}
-            src={r.imgUrl}
+            src={useImage(r.imgUrl)}
             alt="Top"
             className="h-full aspect-square object-cover rounded-full cursor-pointer"
            />

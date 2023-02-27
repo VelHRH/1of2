@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
+import { useImage } from "../../../hooks/useImage";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
@@ -166,7 +167,7 @@ const Rating = () => {
          <RatingElement
           key={event._id}
           index={index + 1 + i * 8}
-          image={event.imgUrl}
+          image={useImage(event.imgUrl)}
           wins={event.wins}
           handleClick={handleClick}
          >
@@ -193,7 +194,7 @@ const Rating = () => {
        <div className="w-full h-full flex justify-between items-center text-2xl">
         <img
          onClick={() => setIsEventOpened(index)}
-         src={r.imgUrl}
+         src={useImage(r.imgUrl)}
          alt="Top"
          className="h-full aspect-square object-cover rounded-full cursor-pointer"
         />

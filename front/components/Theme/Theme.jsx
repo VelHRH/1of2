@@ -12,9 +12,9 @@ export const Theme = (props) => {
      <div
       className={`flex justify-between text-xl items-center rounded-lg text-slate-900 dark:text-slate-50 mb-3`}
      >
-      <div>{author}</div>
-      <div className="self-center text-center">{name}</div>
-      <div>
+      <div className="border-2 border-sky-500 rounded-lg p-1">{author}</div>
+      <div className="self-center text-center flex-1 px-2">{name}</div>
+      <div className="flex items-center border-2 border-sky-500 rounded-lg p-1">
        <i className="fa-regular fa-star mr-1 text-2xl"></i>
        {stars.toFixed(2)}
       </div>
