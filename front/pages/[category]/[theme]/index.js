@@ -13,6 +13,7 @@ import { CommentSection } from "../../../components/Comment/CommentSection";
 import { Comment } from "../../../components/Comment/Comment";
 import { AlertMessage } from "../../../components/AlertMessage";
 import { ThemePanel } from "../../../components/ThemePanel";
+import { FunTip } from "../../../components/FunTip";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -385,10 +386,11 @@ const Theme = () => {
         Community: {DataRatings()[0].avg.toFixed(2)}
        </h1>
        <ChartRatings data={DataRatings().slice(1)} />
-       <div className="text-xl dark:text-slate-50 mt-5">
+       <div className="text-xl dark:text-slate-50 mt-5 mb-14">
         Based on {themeData.data[0].stars.length} votes
        </div>
-       <h1 className="text-3xl mb-5 mt-16 dark:text-slate-50">
+       <FunTip tipText={themeData.data[0].description}></FunTip>
+       <h1 className="text-3xl mb-5 mt-10 dark:text-slate-50">
         Top in this theme:
        </h1>
        {ratingData.data.length > 1 &&
