@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import Head from "next/head";
 import { FunTip } from "../../components/FunTip";
@@ -7,18 +8,18 @@ import { useQuery, QueryClient, dehydrate } from "react-query";
 import { Theme } from "../../components/Theme/Theme";
 
 const getThemes = async () => {
-  const res = await fetch(`${process.env.API_HOST}/categories/creations`);
-  return res.json();
-}
+ const res = await fetch(`${process.env.API_HOST}/categories/creations`);
+ return res.json();
+};
 
 export const getServerSideProps = async () => {
-  const queryClient = new QueryClient();
+ const queryClient = new QueryClient();
 
  await queryClient.prefetchQuery("custom themes", () => getThemes());
- 
+
  const data = await getThemes();
- 
- if (data.length===0) {
+
+ if (data.length === 0) {
   return {
    notFound: true,
   };
@@ -26,11 +27,12 @@ export const getServerSideProps = async () => {
  return {
   props: { dehydratedState: dehydrate(queryClient) },
  };
-}
+};
 
 const Creations = () => {
  const [searchVal, setSearchVal] = useState("");
- 
+ const [isLogged, setIsLogged] = useState(false);
+
  const themes = useQuery("custom themes", () => getThemes());
 
  const CountStars = (arr) => {
@@ -38,6 +40,10 @@ const Creations = () => {
   arr.map((item) => (sum += item.stars));
   return sum / arr.length;
  };
+
+ useEffect(() => {
+  window.localStorage.getItem("token") && setIsLogged(true);
+ }, []);
 
  if (themes.isLoading) return <div>Loading...</div>;
  return (
@@ -51,7 +57,10 @@ const Creations = () => {
     <h1 className="text-4xl mb-7 dark:text-slate-50">Creations</h1>
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
     <div className="grid gap-4 grid-cols-2">
-    {themes.data.map(theme => <Link href={`/creations/${theme.name}`}>
+     {themes.data.map(
+      (theme) =>
+       searchVal === theme.name.slice(0, searchVal.length) && (
+        <Link key={theme._id} href={`/creations/${theme.name}`}>
          <Theme
           name={theme.name}
           stars={CountStars(theme.stars)}
@@ -59,16 +68,20 @@ const Creations = () => {
           author={theme.author}
           description={theme.description}
          />
-        </Link>)}
+        </Link>
+       )
+     )}
     </div>
    </div>
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
-    <Link className="w-full" href={`/creations/new`}>
-     <div className="text-center py-4 text-2xl mb-10 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500">
-      <i className={`fa-solid fa-plus mr-3`}></i>
-      New theme
-     </div>
-    </Link>
+    {isLogged && (
+     <Link className="w-full" href={`/creations/new`}>
+      <div className="text-center py-4 text-2xl mb-10 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500">
+       <i className={`fa-solid fa-plus mr-3`}></i>
+       New theme
+      </div>
+     </Link>
+    )}
     <FunTip
      tipText={
       "These all themes are created by our community. Make sure you don't repeate somebody's theme before creating and you don't insult anyone."

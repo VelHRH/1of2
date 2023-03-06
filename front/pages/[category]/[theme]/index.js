@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { NumberBtn } from "../../../components/NumberBtn";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
@@ -13,6 +12,7 @@ import { useRouter } from "next/router";
 import { CommentSection } from "../../../components/Comment/CommentSection";
 import { Comment } from "../../../components/Comment/Comment";
 import { AlertMessage } from "../../../components/AlertMessage";
+import { ThemePanel } from "../../../components/ThemePanel";
 
 const getTheme = async (category, theme) => {
  const res = await fetch(
@@ -258,9 +258,6 @@ const Theme = () => {
  const [isRating, setIsRating] = useState(false);
  const [isEventOpened, setIsEventOpened] = useState(-1);
  const [isGame, setIsGame] = useState("false");
- const handleModeChoice = (mode) => {
-  setClickedMode(mode);
- };
 
  if (themeData.isLoading) return <div>Loading...</div>;
 
@@ -353,56 +350,13 @@ const Theme = () => {
         height={500}
         className="h-[350px] w-full object-cover"
        />
-       <div className="grid gap-4 grid-cols-4 mt-5 w-full mb-10">
-        <NumberBtn
-         isClicked={clickedMode === "8"}
-         handleModeChoice={handleModeChoice}
-        >
-         8
-        </NumberBtn>
-        <NumberBtn
-         isClicked={clickedMode === "16"}
-         handleModeChoice={handleModeChoice}
-        >
-         16
-        </NumberBtn>
-        <NumberBtn
-         isClicked={clickedMode === "32"}
-         handleModeChoice={handleModeChoice}
-        >
-         32
-        </NumberBtn>
-        <NumberBtn
-         isClicked={clickedMode === "64"}
-         handleModeChoice={handleModeChoice}
-        >
-         64
-        </NumberBtn>
-        <Link
-         href={`/${themeData.data[0].category}/${themeData.data[0].name}/rating`}
-         className="text-xl md:text-2xl flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500 items-center"
-        >
-         <i className="fa-solid fa-trophy mr-2"></i>
-         Rating
-        </Link>
-        <div className="text-xl md:text-2xl flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-cyan-500 to-blue-600 cursor-pointer rounded-2xl hover:scale-110 ease-in-out duration-500 items-center">
-         <i className="fa-solid fa-share-nodes mr-2"></i>
-         Share
-        </div>
-
-        <div
-         onClick={() =>
-          startClickHandler(
-           window.localStorage.getItem("token")
-            ? jwt_decode(window.localStorage.getItem("token"))._id
-            : null
-          )
-         }
-         className="text-xl md:text-2xl col-span-2 flex justify-center py-2 dark:text-slate-900 text-slate-50 bg-gradient-to-r from-lime-500 to-green-600 cursor-pointer rounded-2xl hover:scale-105 ease-in-out duration-500"
-        >
-         Start
-        </div>
-       </div>
+       <ThemePanel
+        setClickedMode={setClickedMode}
+        maxElements={ratingData.data.length}
+        startClickHandler={startClickHandler}
+        ratingLink={`/${themeData.data[0].category}/${themeData.data[0].name}/rating`}
+        clickedMode={clickedMode}
+       />
        {isRating && (
         <CommentSection submitCommentHandler={submitCommentHandler} />
        )}

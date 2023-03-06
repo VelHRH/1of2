@@ -27,6 +27,10 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
  }, []);
 
  useEffect(() => {
+  setIsOpened(false);
+ }, [router.asPath]);
+
+ useEffect(() => {
   if (nightMode) {
    document.body.classList.add("dark");
    window.localStorage.setItem("theme", "dark");

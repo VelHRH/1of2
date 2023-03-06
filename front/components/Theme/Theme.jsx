@@ -13,13 +13,17 @@ export const Theme = (props) => {
       className={`flex justify-between text-xl items-center rounded-lg text-slate-900 dark:text-slate-50 mb-3`}
      >
       <div className="border-2 border-sky-500 rounded-lg p-1">{author}</div>
-      <div className="self-center text-center flex-1 px-2">{name}</div>
+      <div className="self-center text-center flex-1 px-2 h-[2.5em]">
+       {name}
+      </div>
       <div className="flex items-center border-2 border-sky-500 rounded-lg p-1">
        <i className="fa-regular fa-star mr-1 text-2xl"></i>
        {stars.toFixed(2)}
       </div>
      </div>
-     <p className="text-justify text-slate-500">{description}</p>
+     <p className="text-justify text-slate-500 h-[1.25em] overflow-hidden">
+      {description}
+     </p>
     </div>
    </div>
   </div>

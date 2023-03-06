@@ -65,7 +65,7 @@ const Category = () => {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-2">
-     {data.map(
+     {data?.map(
       (theme) =>
        theme.name.slice(0, searchVal.length).toUpperCase() ===
         searchVal.toUpperCase() && (
