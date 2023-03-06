@@ -71,12 +71,17 @@ export const giveStars = async (req, res) => {
  export const add = async (req, res) => {
   try {
     const user = await req.userId;
-    const userName = await UserModel.find({_id: user});
+    const themesWithName = await ThemeModel.find({name: req.body.name})
+    if (themesWithName.length > 0) {
+      return res.status(403).json({ message: "Theme with the name already exists" });
+    }
+    const userName = await UserModel.findOneAndUpdate({_id: user}, {$push: {created: req.body.name}},);
     const doc = new ThemeModel({
       name: req.body.name,
       imgUrl: req.body.imgUrl,
       stars: [],
-      author: userName[0].login,
+      author: userName.login,
+      category: "creations",
       description: req.body.description,
     });
     const theme = await doc.save();
