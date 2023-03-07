@@ -2,12 +2,37 @@ import { useState, useEffect } from "react";
 import { Logo } from "./Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import styles from "../../styles/Rating.module.css";
+import { useQuery } from "react-query";
 
-export const Navbar = ({ isAuth, setIsAuth }) => {
+const getAllThemes = async () => {
+ const res = await fetch(`${process.env.API_HOST}/getAllThemes`);
+ return res.json();
+};
+
+const getUser = async (id) => {
+ console.log(id);
+ const res = await fetch(`${process.env.API_HOST}/me`, {
+  method: "GET",
+  headers: {
+   "Content-Type": "application/json;charset=utf-8",
+   Authorization: id,
+  },
+ });
+ return res.json();
+};
+
+export const Navbar = () => {
  const [isOpened, setIsOpened] = useState(false);
  const [active, setActive] = useState("categories");
  const [nightMode, setNightMode] = useState(false);
  const router = useRouter();
+
+ const themes = useQuery("themes", () => getAllThemes());
+ const me = useQuery("me", () =>
+  getUser(`${window.localStorage.getItem("token")}`)
+ );
 
  useEffect(() => {
   window.localStorage.getItem("theme") && setNightMode(true);
@@ -49,12 +74,16 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
    window.location.href = "/";
   }
  };
+
+ if (themes.isLoading || me.isLoading) return <div>Loading...</div>;
  return (
-  <div className={`w-20 ${isOpened && "w-[200px]"} z-10`}>
+  <div className={`w-20 ${isOpened && "w-[200px]"} z-10 h-screen`}>
    <div
     className={`flex flex-col w-20 ${
      isOpened && "w-[200px]"
-    } justify-between select-none px-3 pb-5 bg-slate-100 dark:bg-slate-900 text-slate-500 h-screen fixed`}
+    } justify-between overflow-y-scroll ${
+     styles.nobar
+    } select-none px-3 pb-5 bg-slate-100 dark:bg-slate-900 text-slate-500 h-screen fixed`}
    >
     <div className="flex flex-col items-center w-full">
      <Logo openMenu={openMenu} isOpened={isOpened} />
@@ -103,6 +132,48 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
        <div className="text-xl">{isOpened && "community"}</div>
       </Link>
      </div>
+     {!me.data.message ? (
+      <div
+       className={`pt-7 border-t-2 border-slate-400 flex w-full flex-col px-3 text-2xl cursor-pointer ${
+        isOpened ? "items-start" : "items-center"
+       } `}
+      >
+       {me.data.favourite.map((fav) => (
+        <Link
+         key={fav}
+         href={`/${
+          themes.data.filter((obj) => {
+           return obj.name === fav;
+          })[0].category
+         }/${
+          themes.data.filter((obj) => {
+           return obj.name === fav;
+          })[0].name
+         }`}
+         className="w-full"
+        >
+         <Image
+          loader={() =>
+           themes.data.filter((obj) => {
+            return obj.name === fav;
+           })[0].imgUrl
+          }
+          src={
+           themes.data.filter((obj) => {
+            return obj.name === fav;
+           })[0].imgUrl
+          }
+          alt="Theme Pic"
+          width={200}
+          height={500}
+          className={`w-full object-cover mb-5 ${
+           isOpened ? "h-12 rounded-lg w-full" : "aspect-square rounded-full "
+          }`}
+         />
+        </Link>
+       ))}
+      </div>
+     ) : null}
     </div>
     <div
      className={`flex flex-col items-center px-3 w-full text-2xl cursor-pointer ${
@@ -125,7 +196,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       ></i>
       <div className="text-xl">{isOpened && "switch mode"}</div>
      </div>
-     {!isAuth ? (
+     {me.data.message ? (
       <Link
        href={`/login`}
        onClick={() => {
@@ -141,7 +212,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       </Link>
      ) : (
       <Link
-       href={`/user/${isAuth.data._id}`}
+       href={`/user/${me.data._id}`}
        onClick={() => {
         setActive("login");
        }}
@@ -149,7 +220,7 @@ export const Navbar = ({ isAuth, setIsAuth }) => {
       >
        <div className={`w-[40px] h-[40px] ${isOpened && "mr-2"}`}>
         <img
-         src={isAuth.data.imgUrl}
+         src={me.data.imgUrl}
          alt="Profile"
          className="w-full h-full object-cover rounded-full"
         />

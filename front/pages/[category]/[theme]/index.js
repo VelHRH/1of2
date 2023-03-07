@@ -213,7 +213,7 @@ const Theme = () => {
   getComments(category, theme)
  );
 
- const me = useQuery(["me", `${window.localStorage.getItem("token")}`], () =>
+ const me = useQuery("me", () =>
   getUser(`${window.localStorage.getItem("token")}`)
  );
 
