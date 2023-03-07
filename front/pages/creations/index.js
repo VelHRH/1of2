@@ -76,7 +76,7 @@ const Creations = () => {
    <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
     {isLogged && (
      <Link className="w-full" href={`/creations/new`}>
-      <div className="text-center py-4 text-2xl mb-10 rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500">
+      <div className="text-center py-4 text-2xl mb-10 rounded-xl w-full bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500">
        <i className={`fa-solid fa-plus mr-3`}></i>
        New theme
       </div>
