@@ -38,6 +38,7 @@ app.get('/categories/:name', CategoryController.getOne);
 app.get('/categories/:name/:id', SubController.getOne);
 app.get('/categories/:name/:id/rating', EventController.getRating);
 app.post('/categories/:name/:id', checkAuth, SubController.giveStars);
+app.post('/categories/:name/:id/favourite', checkAuth,  SubController.changeFav);
 app.get('/sortedcategories', SubController.sortByCat);
 
 app.post('/categories/:name/:id/results', GameController.results);

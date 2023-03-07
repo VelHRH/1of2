@@ -67,6 +67,22 @@ export const giveStars = async (req, res) => {
   }
  };
 
+ export const changeFav = async (req, res) => {
+  try {
+    const theme = await req.params.id;
+    const userId = await req.userId;
+    const user = await UserModel.findOne({_id: userId});
+    if (user.favourite.includes(theme)){
+      await UserModel.findOneAndUpdate({_id: userId}, {$pull: {favourite: theme}});
+    } else {
+      await UserModel.findOneAndUpdate({_id: userId}, {$push: {favourite: theme}});
+    }
+    return res.json({success: true});
+  } catch (err) {
+   console.log(err);
+   res.status(500).json({ message: "Unable to rate the theme" });
+  }
+ };
 
  export const add = async (req, res) => {
   try {

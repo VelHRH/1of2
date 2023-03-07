@@ -20,6 +20,10 @@ const UsersSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  favourite:{
+    type: Array,
+    default: []
+  },
   rank: {
     type: String,
     default: "common"
