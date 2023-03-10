@@ -8,11 +8,7 @@ import Link from "next/link";
 import { BackBtn } from "../../components/BackBtn";
 import { SideTop } from "../../components/SideTop";
 import { useQuery, QueryClient, dehydrate } from "react-query";
-
-const getCategory = async (name) => {
-  const res = await fetch(`${process.env.API_HOST}/categories/${name}`);
-  return res.json();
-}
+import {getCategory} from "../../components/Fetch/getCategory"
 
 export const getServerSideProps = async (context) => {
  const { category } = context.params;
@@ -69,7 +65,7 @@ const Category = () => {
       (theme) =>
        theme.name.slice(0, searchVal.length).toUpperCase() ===
         searchVal.toUpperCase() && (
-        <Link href={`/${category}/${theme.name}`}>
+        <Link key={theme.name} href={`/${category}/${theme.name}`}>
          <Theme
           name={theme.name}
           stars={CountStars(theme.stars)}

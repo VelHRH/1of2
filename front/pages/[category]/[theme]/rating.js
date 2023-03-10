@@ -1,9 +1,8 @@
-import { useEffect, useState} from "react";
+import {useState} from "react";
 import { BackBtn } from "../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
 import styles from "../../../styles/Rating.module.css"
-import ChartRatings from "../../../components/ChartRatings";
 import { RatingElement } from "../../../components/RatingElement";
 import { FullEvenView } from "../../../components/FullEvenView";
 import { useRouter } from "next/router";
@@ -14,25 +13,10 @@ import {
  useInfiniteQuery,
 } from "react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-const getTheme = async (category, theme) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}`
- );
- return res.json();
-};
-
-const getRating = async (category, theme, page) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/rating`
- );
- const data = await res.json();
- return {
-  data: data.slice(8 * page, 8 * (page + 1)),
-  nextPage:
-   (data.length - (data.length % 8)) / 8 + 1 > page + 1 ? page + 1 : undefined,
- };
-};
+import { getTheme } from "../../../components/Fetch/getTheme";
+import ChartRatings from "../../../components/Chart/ChartRatings";
+import { getRating } from "../../../components/Fetch/getRatingWithData";
+import { DataRatings } from "../../../components/Chart/DataRatings";
 
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
@@ -72,41 +56,11 @@ const Rating = () => {
  const [isEventOpened, setIsEventOpened] = useState(-1);
 
  if (isLoading) return <div></div>;
- if (isError) console.log("ERROR");
 
  if (themeData.isLoading) return <div>Loading...</div>;
 
  const handleClick = (index) => {
   setIsEventOpened(index);
- };
-
- const DataRatings = () => {
-  let nOf5 = 0,
-   nOf4 = 0,
-   nOf3 = 0,
-   nOf2 = 0,
-   nOf1 = 0;
-  for (let i of themeData.data[0].stars) {
-   if (i.stars === 5) nOf5++;
-   if (i.stars === 4) nOf4++;
-   if (i.stars === 3) nOf3++;
-   if (i.stars === 2) nOf2++;
-   if (i.stars === 1) nOf1++;
-  }
-  return [
-   {
-    avg:
-     (nOf5 * 5 + nOf4 * 4 + nOf3 * 3 + nOf2 * 2 + nOf1 * 1) /
-     (nOf5 + nOf4 + nOf3 + nOf2 + nOf1),
-   },
-   nOf1 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf1 },
-   nOf2 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf2 },
-   nOf3 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf3 },
-   nOf4 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf4 },
-   nOf5 !== 0 && {
-    value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf5,
-   },
-  ];
  };
 
  return (
@@ -179,9 +133,9 @@ const Rating = () => {
     </div>
     <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
      <h1 className="text-3xl mb-5 dark:text-slate-50">
-      Community: {DataRatings()[0].avg.toFixed(2)}
+      Community: {DataRatings(themeData.data[0].stars)[0].avg.toFixed(2)}
      </h1>
-     <ChartRatings data={DataRatings().slice(1)} />
+     <ChartRatings data={DataRatings(themeData.data[0].stars).slice(1)} />
      <div className="text-xl dark:text-slate-50 mt-5">
       Based on {themeData.data[0].stars.length} votes
      </div>
@@ -189,7 +143,7 @@ const Rating = () => {
       Top in this theme:
      </h1>
      {data.pages[0].data.slice(0, 2).map((r, index) => (
-      <div className="h-[100px] w-full mb-3">
+      <div key={index} className="h-[100px] w-full mb-3">
        <div className="w-full h-full flex justify-between items-center text-2xl">
         <img
          onClick={() => setIsEventOpened(index)}

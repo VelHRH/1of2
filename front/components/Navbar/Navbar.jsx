@@ -5,23 +5,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "../../styles/Rating.module.css";
 import { useQuery } from "react-query";
-
-const getAllThemes = async () => {
- const res = await fetch(`${process.env.API_HOST}/getAllThemes`);
- return res.json();
-};
-
-const getUser = async (id) => {
- console.log(id);
- const res = await fetch(`${process.env.API_HOST}/me`, {
-  method: "GET",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: id,
-  },
- });
- return res.json();
-};
+import { getAllThemes } from "../Fetch/getAllThemes";
+import { getUser } from "../Fetch/getUser";
 
 export const Navbar = () => {
  const [isOpened, setIsOpened] = useState(false);
@@ -36,7 +21,10 @@ export const Navbar = () => {
 
  useEffect(() => {
   window.localStorage.getItem("theme") && setNightMode(true);
+ }, []);
 
+ useEffect(() => {
+  setIsOpened(false);
   if (router.asPath.includes("creations")) {
    setActive("creations");
   } else if (router.asPath.includes("user")) {
@@ -49,10 +37,6 @@ export const Navbar = () => {
   } else {
    setActive("categories");
   }
- }, []);
-
- useEffect(() => {
-  setIsOpened(false);
  }, [router.asPath]);
 
  useEffect(() => {
@@ -211,30 +195,33 @@ export const Navbar = () => {
        <div className="text-xl">{isOpened && "login/register"}</div>
       </Link>
      ) : (
-      <Link
-       href={`/user/${me.data._id}`}
-       onClick={() => {
-        setActive("login");
-       }}
-       className="flex justify-start items-center w-full"
-      >
-       <div className={`w-[40px] h-[40px] ${isOpened && "mr-2"}`}>
-        <img
+      <div className="flex justify-start items-center w-full">
+       <Link
+        href={`/user/${me.data._id}`}
+        onClick={() => {
+         setActive("login");
+        }}
+        className={`w-[40px] h-[40px] ${isOpened && "mr-2"}`}
+       >
+        <Image
+         loader={() => me.data.imgUrl}
          src={me.data.imgUrl}
+         width={20}
+         height={20}
          alt="Profile"
          className="w-full h-full object-cover rounded-full"
         />
-       </div>
+       </Link>
+
        <div
         onClick={logout}
-        className={`text-xl ${isOpened && "p-1"} ${
-         active === "login" &&
-         "text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600 hover:text-red-500 duration-300"
-        }`}
+        className={`text-xl ${
+         isOpened && "p-1"
+        } text-slate-500 flex-1 bg-slate-200 dark:bg-slate-800 rounded-lg text-center hover:bg-red-300 dark:hover:bg-red-300 hover:text-slate-600 duration-300`}
        >
         {isOpened && "logout"}
        </div>
-      </Link>
+      </div>
      )}
     </div>
    </div>

@@ -4,16 +4,10 @@ import { useQuery, QueryClient, dehydrate } from "react-query";
 import { BackBtn } from "../../../../components/BackBtn";
 import Link from "next/link";
 import Head from "next/head";
-
+import { getResults } from "../../../../components/Fetch/game/getResults";
 import { ResultElement } from "../../../../components/ResultElement";
 import { FunTip } from "../../../../components/FunTip";
-
-const getResults = async (category, theme, session) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/oneresult`
- );
- return res.json();
-};
+import Image from "next/image";
 
 export const getServerSideProps = async (context) => {
  const { category, theme, session } = await context.params;
@@ -48,7 +42,6 @@ const Result = () => {
  );
 
  useEffect(() => {
-  console.log(data.top);
   if (data.top[0].wins === 0) {
    setTipText(
     `Wow! You've got an interesting taste, as this is the first win for "${data.top[0].name}" here.`
@@ -64,11 +57,10 @@ const Result = () => {
     } win for "${data.top[0].name}" here.`
    );
   }
- }, []);
+ }, [data.top]);
 
  const isGrey = (index) => {
   const eventName = data.history[index].name;
-  console.log(index);
   const neighbourName =
    index % 2 === 0
     ? data.history[index + 1].name
@@ -114,15 +106,18 @@ const Result = () => {
        ))}
      {displayMode === "history" && (
       <div className="flex">
-       {console.log(data.history)}
        <div className="w-1/2">
         {data.history.map(
          (result, index) =>
           index % 2 === 0 &&
           index !== data.history.length - 1 && (
-           <img
+           <Image
+            key={index}
+            loader={() => result.imgUrl}
             src={result.imgUrl}
             alt="Team1"
+            width={20}
+            height={20}
             className={`mb-2 h-[250px] w-full cursor-pointer object-contain ${
              !isGrey(index) && "grayscale"
             }`}
@@ -134,9 +129,13 @@ const Result = () => {
         {data.history.map(
          (result, index) =>
           index % 2 === 1 && (
-           <img
+           <Image
+            loader={() => result.imgUrl}
+            key={index}
             src={result.imgUrl}
             alt="Team2"
+            width={20}
+            height={20}
             className={`mb-2 h-[250px] w-full cursor-pointer object-contain ${
              !isGrey(index) && "grayscale"
             }`}

@@ -6,11 +6,7 @@ import { Search } from "../../components/Search";
 import Link from "next/link";
 import { useQuery, QueryClient, dehydrate } from "react-query";
 import { Theme } from "../../components/Theme/Theme";
-
-const getThemes = async () => {
- const res = await fetch(`${process.env.API_HOST}/categories/creations`);
- return res.json();
-};
+import { getThemes } from "../../components/Fetch/getCustomThemes";
 
 export const getServerSideProps = async () => {
  const queryClient = new QueryClient();

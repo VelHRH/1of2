@@ -3,48 +3,10 @@ import Head from "next/head";
 import { Input } from "../../components/Input";
 import { useRouter } from "next/router";
 import { AlertMessage } from "../../components/AlertMessage";
-
-const uploadImg = async (formData) => {
- await fetch(`${process.env.API_HOST}/upload`, {
-  method: "POST",
-  headers: {
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: formData,
- });
-};
-
-const addTheme = async (name, imgUrl, description) => {
- const res = await fetch(`${process.env.API_HOST}/theme/add`, {
-  method: "POST",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({
-   name,
-   imgUrl,
-   description,
-  }),
- });
-
- return res.json();
-};
-
-const addEvents = async (names, theme, pictures) => {
- await fetch(`${process.env.API_HOST}/events/add`, {
-  method: "POST",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({
-   names,
-   theme,
-   pictures,
-  }),
- });
-};
+import Image from "next/image";
+import { uploadImg } from "../../components/Fetch/uploadImg";
+import { addTheme } from "../../components/Fetch/addTheme";
+import { addEvents } from "../../components/Fetch/addEvents";
 
 const Create = () => {
  const [name, setName] = useState("");
@@ -178,8 +140,14 @@ const Create = () => {
          >
           {pEvents[i] !== undefined && pEvents[i].name !== undefined ? (
            <>
-            <img
+            <Image
+             loader={() => {
+              URL.createObjectURL(pEvents[i]);
+             }}
+             alt="New"
              src={URL.createObjectURL(pEvents[i])}
+             width={32}
+             height={32}
              className="w-[32px] aspect-square object-cover mr-2"
             />
            </>

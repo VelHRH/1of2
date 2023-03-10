@@ -6,26 +6,16 @@ import { FullEvenView } from "../../components/FullEvenView";
 import Link from "next/link"
 import { useRouter } from "next/router";
 import { useQuery, QueryClient, dehydrate } from "react-query";
-
-const getUser = async (id) => {
-  const res = await fetch(`${process.env.API_HOST}/me`, {
-    method: "POST",
-    headers: {
-     "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify({_id: id.toString()}),
-   });
-   return res.json()
-}
+import { getUserById } from "../../components/Fetch/getUser";
 
 export const getServerSideProps = async (context) => {
  const { id } = context.params;
  const queryClient = new QueryClient();
  await queryClient.prefetchQuery(["user", id], () =>
- getUser(id)
+ getUserById(id)
  );
 
- const data = await getUser(id);
+ const data = await getUserById(id);
 
  if (data.message) {
   return {
@@ -44,7 +34,7 @@ const Me = () => {
   const { id } = router.query;
  
   const userInfo = useQuery(["user", id], () =>
-  getUser(id)
+  getUserById(id)
   );
 
   useEffect(() => {window.localStorage.getItem('token') && parseJwt(window.localStorage.getItem('token'))._id === userInfo.data._id ? setAllowEdit(true) : setAllowEdit(false)}, [])

@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import { ProfileCard } from "../../components/ProfileCard";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
 import Link from "next/link";
-
-const getUsers = async () => {
- const res = await fetch(`${process.env.API_HOST}/users/all`);
- return res.json();
-};
+import Image from "next/image";
+import { getUsers } from "../../components/Fetch/getUsers";
 
 export const getServerSideProps = async (context) => {
  const queryClient = new QueryClient();
@@ -58,7 +55,7 @@ export default function AllUsers() {
       {searchedUsers
        .filter((u, i) => i % 3 === 0)
        .map((user) => (
-        <Link href={`/user/${user._id}`}>
+        <Link key={user._id} href={`/user/${user._id}`}>
          <ProfileCard
           rank={user.rank}
           created={user.created.length}
@@ -74,7 +71,7 @@ export default function AllUsers() {
       {searchedUsers
        .filter((u, i) => i % 3 === 1)
        .map((user) => (
-        <Link href={`/user/${user._id}`}>
+        <Link key={user._id} href={`/user/${user._id}`}>
          <ProfileCard
           rank={user.rank}
           created={user.created.length}
@@ -90,7 +87,7 @@ export default function AllUsers() {
       {searchedUsers
        .filter((u, i) => i % 3 === 2)
        .map((user) => (
-        <Link href={`/user/${user._id}`}>
+        <Link key={user._id} href={`/user/${user._id}`}>
          <ProfileCard
           rank={user.rank}
           created={user.created.length}
@@ -118,10 +115,13 @@ export default function AllUsers() {
       .map((u, index) => (
        <div key={index} className="h-[70px] w-full mb-3 rounded-xl">
         <div className="w-full h-full flex justify-between items-center text-2xl">
-         <img
+         <Image
+          loader={() => u.imgUrl}
           onClick={() => setIsEventOpened(index)}
           src={u.imgUrl}
           alt="Top"
+          width={70}
+          height={20}
           className="h-full aspect-square object-cover rounded-full cursor-pointer"
          />
          <h1 className="dark:text-slate-50">

@@ -5,22 +5,14 @@ import { useState } from "react";
 import { SideTop } from "../components/SideTop";
 import { FunTip } from "../components/FunTip";
 import { useQuery, QueryClient, dehydrate } from "react-query";
-
-const getCategories = async () => {
- const res = await fetch(`${process.env.API_HOST}/categories`);
- return res.json();
-};
-
-const sortByCat = async () => {
-  const res = await fetch(`${process.env.API_HOST}/sortedcategories`);
-  return res.json();
- };
+import { getCategories } from "../components/Fetch/getCategories";
+import { getSortedCategories } from "../components/Fetch/getSortedCategories";
 
 export const getStaticProps = async () => {
  const queryClient = new QueryClient();
 
  await queryClient.prefetchQuery("categories", getCategories);
- await queryClient.prefetchQuery("sorted", sortByCat);
+ await queryClient.prefetchQuery("sorted", getSortedCategories);
 
  return {
   props: { dehydratedState: dehydrate(queryClient) },
@@ -31,7 +23,7 @@ export default function Home() {
  const [searchVal, setSearchVal] = useState("");
 
  const { data, isLoading } = useQuery("categories", getCategories);
- const sortedCategories = useQuery("sorted", sortByCat)
+ const sortedCategories = useQuery("sorted", getSortedCategories)
 
  if (isLoading) return <div>Loading...</div>;
 
@@ -47,7 +39,7 @@ export default function Home() {
     <Search searchVal={searchVal} setSearchVal={setSearchVal} />
 
     <div className="grid gap-4 grid-cols-3">
-     {data.map(
+     {data?.map(
       (category) =>
        category.name.slice(0, searchVal.length) === searchVal && (
         <Category key={category._id}>{category.name}</Category>
@@ -65,7 +57,7 @@ export default function Home() {
      <h1 className="text-2xl text-slate-500 mb-3 self-center">
       Top categories:
      </h1>
-     {sortedCategories.data
+     {sortedCategories?.data
       .map((category, index) => (
        <SideTop
         key={index}

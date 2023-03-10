@@ -2,45 +2,9 @@ import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useQuery, useMutation } from "react-query";
-
-const getCurr = async (category, theme, session) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/currentGame`
- );
- return res.json();
-};
-
-const nextEvents = async (category, theme, session, choice) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/next`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-   },
-   body: JSON.stringify({
-    choice,
-   }),
-  }
- );
- return res.json();
-};
-
-const saveResults = async (category, theme, session, user) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/${session}/updateResult`,
-  {
-   method: "PUT",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-   },
-   body: JSON.stringify({
-    user,
-   }),
-  }
- );
- return res.json();
-};
+import { getCurr } from "../../../../components/Fetch/game/getCurr";
+import { nextEvents } from "../../../../components/Fetch/game/nextEvents";
+import { saveResults } from "../../../../components/Fetch/game/saveResults";
 
 const Game = () => {
  const router = useRouter();
@@ -93,7 +57,7 @@ const Game = () => {
        height={500}
        className="w-full h-full object-cover blur-md"
       />
-      <img
+      <Image
        loader={() => curr.data.current[0].imgUrl}
        onClick={() => nextClickHandler(curr.data.current[0])}
        src={curr.data.current[0].imgUrl}

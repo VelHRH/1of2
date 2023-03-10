@@ -4,7 +4,7 @@ import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import jwt_decode from "jwt-decode";
-import ChartRatings from "../../../components/ChartRatings";
+import ChartRatings from "../../../components/Chart/ChartRatings";
 import { StarRating } from "../../../components/Theme/StarRating";
 import { FullEvenView } from "../../../components/FullEvenView";
 import { useQuery, QueryClient, dehydrate, useMutation } from "react-query";
@@ -14,158 +14,19 @@ import { Comment } from "../../../components/Comment/Comment";
 import { AlertMessage } from "../../../components/AlertMessage";
 import { ThemePanel } from "../../../components/ThemePanel";
 import { FunTip } from "../../../components/FunTip";
-
-const getTheme = async (category, theme) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}`
- );
- return res.json();
-};
-
-const editComment = async (category, theme, id, text) => {
- await fetch(`${process.env.API_HOST}/categories/${category}/${theme}/edit`, {
-  method: "PUT",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({
-   id,
-   text,
-  }),
- });
-};
-
-const deleteComment = async (category, theme, id) => {
- await fetch(`${process.env.API_HOST}/categories/${category}/${theme}/delete`, {
-  method: "DELETE",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({
-   id,
-  }),
- });
-};
-
-const postGame = async (category, theme, user, clickedMode) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/results`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-   },
-   body: JSON.stringify({
-    clickedMode,
-    user,
-   }),
-  }
- );
- return res.json();
-};
-
-const getRating = async (category, theme) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/rating`
- );
- return res.json();
-};
-
-const getComments = async (category, theme) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/allcomments`
- );
- return res.json();
-};
-
-const giveStar = async (category, theme, r) => {
- await fetch(`${process.env.API_HOST}/categories/${category}/${theme}`, {
-  method: "POST",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: `${window.localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({
-   stars: r,
-  }),
- });
-};
-
-const postComment = async (category, theme, text) => {
- const res = await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/comment`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-   body: JSON.stringify({
-    text,
-   }),
-  }
- );
- return res.json();
-};
-
-const likeCommentReq = async (category, theme, id) => {
- await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/likecomment`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-   body: JSON.stringify({
-    id,
-   }),
-  }
- );
-};
-
-const disCommentReq = async (category, theme, id) => {
- await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/dislikecomment`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-   body: JSON.stringify({
-    id,
-   }),
-  }
- );
-};
-
-const changeFav = async (category, theme) => {
- await fetch(
-  `${process.env.API_HOST}/categories/${category}/${theme}/favourite`,
-  {
-   method: "POST",
-   headers: {
-    "Content-Type": "application/json;charset=utf-8",
-    Authorization: `${window.localStorage.getItem("token")}`,
-   },
-  }
- );
-};
-
-const getUser = async (id) => {
- console.log(id);
- const res = await fetch(`${process.env.API_HOST}/me`, {
-  method: "GET",
-  headers: {
-   "Content-Type": "application/json;charset=utf-8",
-   Authorization: id,
-  },
- });
- return res.json();
-};
+import { getTheme } from "../../../components/Fetch/getTheme";
+import { getUser } from "../../../components/Fetch/getUser";
+import { editComment } from "../../../components/Fetch/comment/editComment";
+import { deleteComment } from "../../../components/Fetch/comment/deleteComment";
+import { getComments } from "../../../components/Fetch/comment/getComments";
+import { postComment } from "../../../components/Fetch/comment/postComment";
+import { likeCommentReq } from "../../../components/Fetch/comment/likeCommentReq";
+import { disCommentReq } from "../../../components/Fetch/comment/disCommentReq";
+import { DataRatings } from "../../../components/Chart/DataRatings";
+import { postGame } from "../../../components/Fetch/postGame";
+import { getRating } from "../../../components/Fetch/getRating";
+import { giveStar } from "../../../components/Fetch/giveStar";
+import { changeFav } from "../../../components/Fetch/changeFav";
 
 export const getServerSideProps = async (context) => {
  const { category, theme } = context.params;
@@ -297,35 +158,6 @@ const Theme = () => {
   deleteMutation.mutate({ category, theme, id });
  };
 
- const DataRatings = () => {
-  let nOf5 = 0,
-   nOf4 = 0,
-   nOf3 = 0,
-   nOf2 = 0,
-   nOf1 = 0;
-  for (let i of themeData.data[0].stars) {
-   if (i.stars === 5) nOf5++;
-   if (i.stars === 4) nOf4++;
-   if (i.stars === 3) nOf3++;
-   if (i.stars === 2) nOf2++;
-   if (i.stars === 1) nOf1++;
-  }
-  return [
-   {
-    avg:
-     (nOf5 * 5 + nOf4 * 4 + nOf3 * 3 + nOf2 * 2 + nOf1 * 1) /
-     (nOf5 + nOf4 + nOf3 + nOf2 + nOf1),
-   },
-   nOf1 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf1 },
-   nOf2 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf2 },
-   nOf3 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf3 },
-   nOf4 !== 0 && { value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf4 },
-   nOf5 !== 0 && {
-    value: (100 / (nOf5 + nOf4 + nOf3 + nOf2 + nOf1)) * nOf5,
-   },
-  ];
- };
-
  useEffect(() => {
   window.localStorage.getItem("token") && setIsRating(true);
  }, []);
@@ -412,29 +244,29 @@ const Theme = () => {
       ))}
      </div>
      <div className="w-[25%] bg-slate-100 dark:bg-slate-900 min-h-screen p-10 flex flex-col items-center">
-      {console.log(me.data)}
-      {me.data.message !== "No access" &&
-      me.data.favourite.includes(themeData.data[0].name) ? (
-       <button
-        onClick={() => favHandler()}
-        className="text-center py-4 text-2xl mb-10 w-full rounded-xl bg-slate-200 dark:bg-slate-700 text-sky-500 hover:scale-110 cursor-pointer ease-in-out duration-500"
-       >
-        <i class="fa-solid fa-heart mr-2"></i>
-        Remove
-       </button>
-      ) : (
-       <button
-        onClick={() => favHandler()}
-        className="text-center py-4 text-2xl mb-10 w-full rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500"
-       >
-        <i class="fa-solid fa-heart mr-2"></i>
-        Add
-       </button>
-      )}
+      {me.data.message !== "No access" ? (
+       me.data.favourite.includes(themeData.data[0].name) ? (
+        <button
+         onClick={() => favHandler()}
+         className="text-center py-4 text-2xl mb-10 w-full rounded-xl bg-slate-200 dark:bg-slate-700 text-sky-500 hover:scale-110 cursor-pointer ease-in-out duration-500"
+        >
+         <i class="fa-solid fa-heart mr-2"></i>
+         Remove
+        </button>
+       ) : (
+        <button
+         onClick={() => favHandler()}
+         className="text-center py-4 text-2xl mb-10 w-full rounded-xl bg-gradient-to-r dark:text-slate-900 text-slate-50 from-cyan-500 to-blue-600 hover:scale-110 cursor-pointer ease-in-out duration-500"
+        >
+         <i class="fa-solid fa-heart mr-2"></i>
+         Add
+        </button>
+       )
+      ) : null}
       <h1 className="text-3xl mb-5 dark:text-slate-50">
-       Community: {DataRatings()[0].avg.toFixed(2)}
+       Community: {DataRatings(themeData.data[0].stars)[0].avg.toFixed(2)}
       </h1>
-      <ChartRatings data={DataRatings().slice(1)} />
+      <ChartRatings data={DataRatings(themeData.data[0].stars).slice(1)} />
       <div className="text-xl dark:text-slate-50 mt-5 mb-14">
        Based on {themeData.data[0].stars.length} votes
       </div>
@@ -446,9 +278,12 @@ const Theme = () => {
        ratingData.data.slice(0, 2).map((r, index) => (
         <div key={index} className="h-[100px] w-full mb-3">
          <div className="w-full h-full flex justify-between items-center text-2xl">
-          <img
+          <Image
+           loader={() => r.imgUrl}
            onClick={() => setIsEventOpened(index)}
            src={r.imgUrl}
+           width={100}
+           height={100}
            alt="Top"
            className="h-full aspect-square object-cover rounded-full cursor-pointer"
           />
